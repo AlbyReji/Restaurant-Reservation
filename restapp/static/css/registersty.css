@@ -1,0 +1,17 @@
+.form-control{
+    width: 213px;
+}
+.navbar-brand{
+    font-size:  xx-large;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    color: green;
+}
+.heading-new{
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    color: green;
+}
+.login-header{
+    margin-top: 100px;
+    padding-left: 24px;
+}
+

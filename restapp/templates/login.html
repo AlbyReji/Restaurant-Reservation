@@ -1,0 +1,120 @@
+{% load static %}
+<!--
+Author: W3layouts
+Author URL: http://w3layouts.com
+-->
+<!DOCTYPE html>
+<html lang="zxx">
+
+<head>
+	<title> Login </title>
+	<!-- Meta tag Keywords -->
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta charset="UTF-8" />
+	<meta name="keywords"
+		content="Trendz Login Form Responsive web template, Bootstrap Web Templates, Flat Web Templates, Android Compatible web template, Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, SonyEricsson, Motorola web design" />
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+	<!-- <script>
+		addEventListener("load", function () {
+			setTimeout(hideURLbar, 0);
+		}, false);
+
+		function hideURLbar() {
+			window.scrollTo(0, 1);
+		}
+	</script> -->
+	<!-- //Meta tag Keywords -->
+	<!--/Style-CSS -->
+	<link rel="stylesheet" href="{% static 'css/style.css' %}" type="text/css" media="all" />
+	<link rel="stylesheet" href="{% static 'css/registersty.css' %}" type="text/css" media="all" />
+
+	{% if messages %}
+	{% for message in messages%}
+	<script>
+		alert("{{message}}");
+	</script>
+
+	{% endfor %}
+	{% endif%}
+	<!--//Style-CSS -->
+</head>
+
+<body  background="{% static '/image1/b5.jpg' %}">
+	<!-- /login-section -->
+	<!-- 
+	<section class="w3l-forms-23">
+		<div class="forms23-block-hny">
+			<div class="wrapper">
+				<h1>Login</h1>
+			   
+
+				
+				<div class="d-grid forms23-grids">
+					<div class="form23">
+						<div class="main-bg">
+							<h6 class="sec-one"></h6>
+
+						</div>
+						<div class="bottom-content">
+
+							<form method="POST" action=" ">
+                                {% csrf_token %}
+								<input type="text" name="username" class="input-form" placeholder="Your Username"
+										required="required" />
+								<input type="password" name="password" class="input-form"
+										placeholder="Your Password" required="required" />
+								<button type="submit" class="loginhny-btn btn">Login</button>
+							</form>
+							<p>Not a member yet? <a href="#">Join Now!</a></p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>    -->
+
+
+
+
+	<div>
+        <nav class="navbar navbar-expand-lg navbar-lightbg-transparent">
+            <a class="navbar-brand" style="color: black;" href="{% url 'index' %}">OrR</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+          
+
+          </nav>
+    </div>
+
+
+
+	<div>
+		<form action=" " method="post">
+			{% csrf_token%}
+			<div class="container">
+				<div align="center">
+					<div class="login-header" >
+						<h1>Login For Booking</h1><br><br>
+					</div>
+					<label>username</label>
+					{{form.username}}
+					{{form.username.errors}}<br><br>
+
+					<label>password:</label>
+					{{form.password}}
+					{{form.password.}}<br><br>
+
+					<div align="center">
+
+						<input class="btn btn-dark" type="submit" value="Submit" style="margin-left: 59px;">
+					</div>
+		</form>
+	</div>
+
+</body>
+
+</html>

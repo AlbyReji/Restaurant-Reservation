@@ -1,0 +1,188 @@
+{% load static %}
+<!-- <!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Home</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
+    <script src='main.js'></script>
+</head>
+
+<body>
+    <a href="{% url 'login' %}">login</a>
+    <a href="{% url 'register' %}">register</a>
+</body>
+
+</html> -->
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+</html>
+
+<head>
+    <title>Index</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" href="{% static 'css/indexstyle.css' %}" type="text/css" media="all" />
+
+
+
+
+</head>
+
+<body>
+    <!-- <nav class="navbar navbar-expand-lg navbar-light bg-info">
+        <a class="navbar-brand" href="{%url 'index' %}">Home</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span> -->
+
+
+
+    <div>
+        <nav class="navbar navbar-expand-lg navbar-light bg-transparent p-4 fixed-top">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link  text-white" href="{%url 'index' %}">Home <span class="sr-only"></span></a>
+                    </li>
+                    <li class="nav-item ">
+                        <a class="nav-link text-white" href="{% url 'login' %}" style="padding-left: 1198px;">Login</a>
+                    </li>
+
+                    <li class="nav-item" id="navstyle">
+                        <a class="nav-link text-white" href="{% url 'register' %}">Register</a>
+                    </li>
+
+                    <li class="nav-item" id="navstyle">
+                        <a class="nav-link text-white" href="#contact">Contact Us</a>
+                    </li>
+
+                </ul>
+            </div>
+        </nav>
+    </div>
+
+
+
+    <div id="carouselExampleSlidesOnly" class="carousel slide" data-ride="carousel">
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img src="{% static 'image1/b6.jpg' %}" alt="My image" class="d-block w-100" height="755px">
+            </div>
+            <div class="carousel-caption d-none d-md-block">
+                <h1>Online Restaurant Reservation</h1>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+    <!-- <div class="contact" id="contact">
+        <div class="container">
+            <div >
+                <div class="contheading">
+                    <h4>Contact Us</h4>
+                </div>
+                <div class="contdetails">
+                    <form action="" method="post">
+                        {% csrf_token %}
+
+                        <div class="form-group row">
+                            <label for="inputEmail3" class="col-sm-2 col-form-label">Name</label>
+                            <div class="col-sm-10">
+                                {{contform.Name}}
+
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="inputEmail3" class="col-sm-2 col-form-label">Phone</label>
+                            <div class="col-sm-10">
+                                {{contform.Phone}}
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="inputEmail3" class="col-sm-2 col-form-label">Email</label>
+                            <div class="col-sm-10">
+                                {{contform.Email}}
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="inputEmail3" class="col-sm-2 col-form-label">Subject</label>
+                            <div class="col-sm-10">
+                                {{contform.Subject}}
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-10">
+                                <button type="submit" class="btn btn-primary">Send</button>
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+ -->
+
+
+    <div class="contact" id="contact">
+        <form action="" method="post">
+            {% csrf_token%}
+            <div class="container">
+                <div align="center">
+                    <div class="contact-class">
+                        <h2>Contact Us</h2>
+                    </div>
+                    <br>
+                    {{contform.Name }}<br>
+                    {{contform.Name.errors}}
+
+                    <br>
+                    {{contform.Phone}}<br>
+                    {{contform.date.Phone}}
+
+                    <br>
+                    {{contform.Email}}<br>
+                    {{contform.Email.errors}}
+
+                    <label>Subject</label><br>
+                    {{contform.Subject}}<br>
+                    {{contform.Subject.errors}}
+
+                </div>
+                <div align="center">
+                    <input class="btn btn-success" type="submit" value="Submit">
+                </div>
+            </div>
+    </div>
+
+</body>
+
+</html>

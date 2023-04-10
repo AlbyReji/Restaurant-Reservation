@@ -1,0 +1,64 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>contact</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" href="{% static 'css/details.css' %}" type="text/css" media="all" />
+
+
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-info">
+        <a class="navbar-brand" href="{%url 'ownerhome' %}">Home</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    </nav>
+    <div class="caption">
+        <div class="headfont">
+            <center>
+                <h1><b><u>Restaurent Details</u></b></h1>
+            </center><br>
+            <br>
+
+        </div>
+    </div>
+    <div>
+        <form action="" method="post">
+            {% csrf_token%}
+            <div class="container">
+                <div align="center">
+
+                    {{contform.special}}<br>
+                    {{contform.special.errors}}
+
+
+                    {{contform.opentime}}<br>
+                    {{contform.opentime.errors}}
+
+
+                    {{contform.closetime}}<br>
+                    {{contform.closetime.errors}}
+
+                    <div align="center">
+
+                        <input class="btn btn-dark" type="submit" value="Submit" style="margin-left: 40px;">
+                    </div>
+                </div>
+            </div>
+
+    </div>
+
+
+</body>
+
+</html>

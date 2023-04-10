@@ -1,0 +1,67 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" href="{% static 'css/registersty.css' %}" type="text/css" media="all" />
+
+    <title>Document</title>
+</head>
+
+<body background="{% static '/image1/b8.jpg' %}">
+    <div>
+        <nav class="navbar navbar-expand-lg navbar-lightbg-transparent">
+            <a class="navbar-brand" href="{% url 'index' %}">OrR</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+          
+
+          </nav>
+    </div>
+    <div class="container">
+        <div align="center">
+            <div class="heading-new"><h1>Register Here</h1></div><br><br>
+            <form action="" method="post">
+                {% csrf_token%}
+
+                
+                {{form.username}}<br>
+                {{form.username.errors}}
+
+               
+                {{form.email}}<br>
+                {{form.email.errors}}
+
+                {{form.password1}}<br>
+
+
+                {{form.password2}}<br>
+                {{form.password2.errors}}
+
+                {{form.phone_no}}<br>
+
+
+                {{form.first_name}}<br>
+
+                {{form.last_name}}<br><br>
+
+
+                <div align="center">
+                    <input class="btn btn-success" type="submit" value="Submit"></div>
+
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>

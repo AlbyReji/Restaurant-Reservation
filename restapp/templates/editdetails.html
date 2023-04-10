@@ -1,0 +1,37 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>index</title>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <form method="post">
+            {% csrf_token %}
+            <h1 align="center">Update Details</h1><br>
+            <!-- 2 column grid layout with text inputs for the first and last names -->
+            <!-- Text input -->
+            <div class="form-outline mb-4">
+                <input type="text" name="special" id="id_special" required maxlength="20" value="{{rest.special}}"/><br>
+                <label class="form-label" for="id_special">Name</label>
+            </div>
+            <div class="form-outline mb-4">
+                <input type="time" name="opentime" id="id_opentime" required maxlength="100" value="{{rest.opentime}}"/><br>
+                <label class="form-label" for="id_opentime">open time</label>
+            </div>
+            <div class="form-outline mb-4">
+                <input type="time" name="closetime" id="id_closetime" required maxlength="254" value="{{rest.closetime}}"/><br>
+                <label class="form-label" for="id_closetime">close time</label>
+            </div>
+            <!-- Submit button -->
+            <button type="submit" class="btn btn-primary btn-block mb-4">Update</button>
+        </form>
+    </div>
+    
+</body>
+</html>
