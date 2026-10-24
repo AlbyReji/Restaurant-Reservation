@@ -7,20 +7,27 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='bookingdetails',
+            name="bookingdetails",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('time', models.TimeField()),
-                ('date', models.DateField()),
-                ('totalpeople', models.CharField(max_length=10)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("time", models.TimeField()),
+                ("date", models.DateField()),
+                ("totalpeople", models.CharField(max_length=10)),
             ],
             options={
-                'db_table': 'bookingdetails',
+                "db_table": "bookingdetails",
             },
         ),
     ]

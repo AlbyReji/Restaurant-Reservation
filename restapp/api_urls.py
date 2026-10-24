@@ -1,18 +1,19 @@
-from django.urls import path, include
+from django.urls import include, path
 from rest_framework.routers import DefaultRouter
+
 from restapp.api_views import (
-    UserViewSet,
     BookingDetailsViewSet,
     ContactDetailsViewSet,
-    RestDetailsViewSet
+    RestDetailsViewSet,
+    UserViewSet,
 )
 
 router = DefaultRouter()
-router.register(r'users', UserViewSet, basename='api-user')
-router.register(r'bookings', BookingDetailsViewSet, basename='api-booking')
-router.register(r'contacts', ContactDetailsViewSet, basename='api-contact')
-router.register(r'restaurants', RestDetailsViewSet, basename='api-restaurant')
+router.register(r"users", UserViewSet, basename="api-user")
+router.register(r"bookings", BookingDetailsViewSet, basename="api-booking")
+router.register(r"contacts", ContactDetailsViewSet, basename="api-contact")
+router.register(r"restaurants", RestDetailsViewSet, basename="api-restaurant")
 
 urlpatterns = [
-    path('', include(router.urls)),
+    path("", include(router.urls)),
 ]

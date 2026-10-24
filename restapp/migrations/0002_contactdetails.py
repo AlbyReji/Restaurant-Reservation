@@ -6,21 +6,29 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('restapp', '0001_initial'),
+        ("restapp", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='contactdetails',
+            name="contactdetails",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('Name', models.CharField(max_length=50)),
-                ('Phone', models.CharField(max_length=11)),
-                ('Email', models.EmailField(max_length=254)),
-                ('Subject', models.TextField(max_length=50)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("Name", models.CharField(max_length=50)),
+                ("Phone", models.CharField(max_length=11)),
+                ("Email", models.EmailField(max_length=254)),
+                ("Subject", models.TextField(max_length=50)),
             ],
             options={
-                'db_table': 'contactdetails',
+                "db_table": "contactdetails",
             },
         ),
     ]
