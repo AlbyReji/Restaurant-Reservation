@@ -1,6 +1,619 @@
-.form-control{
-    width: 213px;
+/* ==========================================================================
+   Modern Editorial Theme for Restaurant Reservation
+   Warm cream (#fbf8f3), Terracotta rust (#b3391b), Deep charcoal (#1c1917)
+   ========================================================================== */
+
+:root {
+  --bg-primary: #FAF7F2;
+  --bg-card: #FFFFFF;
+  --bg-dark: #191614;
+  --text-primary: #1C1917;
+  --text-secondary: #655E57;
+  --text-muted: #8F877E;
+  --accent-rust: #B8381E;
+  --accent-rust-hover: #9E2F18;
+  --border-light: #E7E2D9;
+  --border-subtle: #F0EAE1;
+  --chip-bg: #FFFFFF;
+  --chip-border: #E2DBD0;
+  --slot-border: #C85A3D;
+  --slot-bg: #FFFFFF;
+  --font-serif: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-pill: 9999px;
+  --shadow-sm: 0 1px 3px rgba(28, 25, 23, 0.04);
+  --shadow-md: 0 8px 24px rgba(28, 25, 23, 0.06);
+  --shadow-lg: 0 16px 36px rgba(28, 25, 23, 0.08);
 }
-.contact-class{
-    margin-top: 75px;
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.5;
+}
+
+/* Container */
+.site-container {
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* ==========================================================================
+   Header & Navigation
+   ========================================================================== */
+.site-header {
+  padding: 32px 0 24px;
+}
+
+.nav-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.brand-logo {
+  font-family: var(--font-serif);
+  font-weight: 700;
+  font-size: 1.25rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+
+.brand-logo:hover {
+  opacity: 0.8;
+  color: var(--text-primary);
+  text-decoration: none;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-link-item {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.nav-link-item:hover {
+  color: var(--text-primary);
+  text-decoration: none;
+}
+
+.nav-link-item.active-nav {
+  color: var(--accent-rust);
+  font-weight: 600;
+}
+
+.btn-sign-in {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 24px;
+  border: 1px solid var(--text-primary);
+  border-radius: var(--radius-pill);
+  color: var(--text-primary);
+  background: transparent;
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.btn-sign-in:hover {
+  background-color: var(--text-primary);
+  color: #FFFFFF;
+  text-decoration: none;
+}
+
+/* ==========================================================================
+   Hero Section
+   ========================================================================== */
+.hero-section {
+  padding: 48px 0 32px;
+}
+
+.hero-title {
+  font-family: var(--font-serif);
+  font-size: clamp(2.5rem, 5.5vw, 4.25rem);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+  margin: 0 0 16px;
+}
+
+.hero-title .accent-word {
+  color: var(--accent-rust);
+  font-style: italic;
+  font-weight: 700;
+}
+
+.hero-subtitle {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  max-width: 520px;
+  margin: 0 0 36px;
+}
+
+/* ==========================================================================
+   Search & Filter Bar Card
+   ========================================================================== */
+.search-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: 16px 20px;
+  box-shadow: var(--shadow-md);
+  margin-bottom: 24px;
+}
+
+.search-form-grid {
+  display: grid;
+  grid-template-columns: 2fr 1.6fr 1.3fr 1.3fr auto;
+  gap: 16px;
+  align-items: end;
+}
+
+.field-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.field-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+  letter-spacing: 0.02em;
+}
+
+.field-control {
+  width: 100%;
+  height: 48px;
+  padding: 0 14px;
+  font-size: 0.95rem;
+  font-family: var(--font-sans);
+  color: var(--text-primary);
+  background-color: #FFFFFF;
+  border: 1px solid var(--chip-border);
+  border-radius: var(--radius-sm);
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.field-control:focus {
+  border-color: var(--accent-rust);
+  box-shadow: 0 0 0 3px rgba(184, 56, 30, 0.12);
+}
+
+.field-control::placeholder {
+  color: var(--text-muted);
+}
+
+.btn-find-table {
+  height: 48px;
+  padding: 0 32px;
+  background-color: var(--accent-rust);
+  color: #FFFFFF;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 0.2s, transform 0.1s;
+}
+
+.btn-find-table:hover {
+  background-color: var(--accent-rust-hover);
+}
+
+.btn-find-table:active {
+  transform: translateY(1px);
+}
+
+/* Category Filter Chips */
+.chips-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 64px;
+}
+
+.chip-btn {
+  background: var(--chip-bg);
+  border: 1px solid var(--chip-border);
+  color: var(--text-primary);
+  font-size: 0.85rem;
+  font-weight: 500;
+  padding: 8px 18px;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+
+.chip-btn:hover {
+  background-color: #F3ECE1;
+  border-color: #D3C7B6;
+  color: var(--text-primary);
+  text-decoration: none;
+}
+
+.chip-btn.active {
+  background-color: var(--text-primary);
+  border-color: var(--text-primary);
+  color: #FFFFFF;
+}
+
+/* ==========================================================================
+   Available Tonight Section
+   ========================================================================== */
+.section-available {
+  padding-bottom: 72px;
+}
+
+.section-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 28px;
+}
+
+.section-title {
+  font-family: var(--font-serif);
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.section-link {
+  color: var(--accent-rust);
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.section-link:hover {
+  color: var(--accent-rust-hover);
+  text-decoration: underline;
+}
+
+/* Restaurant Cards Grid */
+.restaurants-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.restaurant-card {
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border-light);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.restaurant-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+.restaurant-media {
+  height: 190px;
+  width: 100%;
+  position: relative;
+  background-size: cover;
+  background-position: center;
+}
+
+.pastel-peach {
+  background-color: #E6C8B4;
+}
+
+.pastel-sage {
+  background-color: #CCD6C5;
+}
+
+.pastel-ochre {
+  background-color: #E4D5A8;
+}
+
+.restaurant-content {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.restaurant-name {
+  font-family: var(--font-serif);
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  margin: 0 0 6px;
+  color: var(--text-primary);
+}
+
+.restaurant-meta {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 18px;
+}
+
+.time-slots {
+  display: flex;
+  gap: 8px;
+  margin-top: auto;
+  flex-wrap: wrap;
+}
+
+.slot-btn {
+  padding: 6px 14px;
+  border: 1px solid var(--slot-border);
+  background-color: var(--slot-bg);
+  color: var(--accent-rust);
+  border-radius: var(--radius-sm);
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  display: inline-block;
+}
+
+.slot-btn:hover {
+  background-color: var(--accent-rust);
+  color: #FFFFFF;
+  text-decoration: none;
+}
+
+/* ==========================================================================
+   Booking, Simplified (Dark Section)
+   ========================================================================== */
+.section-steps {
+  background-color: var(--bg-dark);
+  color: #FFFFFF;
+  padding: 80px 0 90px;
+}
+
+.steps-title {
+  font-family: var(--font-serif);
+  font-size: 2.3rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin: 0 0 48px;
+}
+
+.steps-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px;
+}
+
+.step-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.step-num {
+  font-family: var(--font-serif);
+  font-size: 3.5rem;
+  line-height: 1;
+  color: #E2967A;
+  margin-bottom: 16px;
+  font-weight: 700;
+}
+
+.step-heading {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #FFFFFF;
+  margin: 0 0 10px;
+}
+
+.step-desc {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #A9A29A;
+  margin: 0;
+}
+
+/* ==========================================================================
+   Contact Section (Preserved functional form with matching aesthetics)
+   ========================================================================== */
+.section-contact {
+  padding: 64px 0;
+  background-color: var(--bg-primary);
+  border-top: 1px solid var(--border-light);
+}
+
+.contact-card {
+  max-width: 640px;
+  margin: 0 auto;
+  background: #FFFFFF;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: 36px 32px;
+  box-shadow: var(--shadow-sm);
+}
+
+.contact-title {
+  font-family: var(--font-serif);
+  font-size: 1.75rem;
+  font-weight: 700;
+  text-align: center;
+  margin: 0 0 8px;
+}
+
+.contact-subtitle {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.form-row {
+  margin-bottom: 16px;
+}
+
+.form-row label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+}
+
+.form-row input,
+.form-row textarea,
+.form-row select {
+  width: 100% !important;
+  max-width: 100% !important;
+  padding: 10px 14px;
+  border: 1px solid var(--chip-border);
+  border-radius: var(--radius-sm);
+  font-size: 0.95rem;
+  font-family: var(--font-sans);
+  background-color: #FFFFFF;
+  color: var(--text-primary);
+  box-sizing: border-box;
+}
+
+.form-row input:focus,
+.form-row textarea:focus {
+  outline: none;
+  border-color: var(--accent-rust);
+  box-shadow: 0 0 0 3px rgba(184, 56, 30, 0.12);
+}
+
+.btn-contact-submit {
+  width: 100%;
+  padding: 12px;
+  background-color: var(--text-primary);
+  color: #FFFFFF;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-contact-submit:hover {
+  background-color: #000000;
+}
+
+.alert-notification {
+  padding: 14px 18px;
+  background-color: #EAF7EE;
+  border: 1px solid #B6E5C2;
+  color: #1F6B38;
+  border-radius: var(--radius-sm);
+  margin-bottom: 24px;
+  font-size: 0.9rem;
+}
+
+/* ==========================================================================
+   Footer
+   ========================================================================== */
+.site-footer {
+  background-color: var(--bg-primary);
+  border-top: 1px solid var(--border-light);
+  padding: 28px 0;
+}
+
+.footer-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.footer-links {
+  display: flex;
+  gap: 24px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.footer-link {
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.footer-link:hover {
+  color: var(--text-primary);
+  text-decoration: underline;
+}
+
+/* ==========================================================================
+   Responsive Breakpoints
+   ========================================================================== */
+@media (max-width: 992px) {
+  .search-form-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .btn-find-table {
+    grid-column: span 2;
+  }
+  .restaurants-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .steps-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+}
+
+@media (max-width: 640px) {
+  .nav-links {
+    display: none;
+  }
+  .search-form-grid {
+    grid-template-columns: 1fr;
+  }
+  .btn-find-table {
+    grid-column: span 1;
+  }
+  .restaurants-grid {
+    grid-template-columns: 1fr;
+  }
+  .footer-inner {
+    flex-direction: column;
+    gap: 16px;
+    text-align: center;
+  }
 }

@@ -1,188 +1,263 @@
 {% load static %}
-<!-- <!DOCTYPE html>
-<html>
-
-<head>
-    <meta charset='utf-8'>
-    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
-    <title>Home</title>
-    <meta name='viewport' content='width=device-width, initial-scale=1'>
-    <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
-    <script src='main.js'></script>
-</head>
-
-<body>
-    <a href="{% url 'login' %}">login</a>
-    <a href="{% url 'register' %}">register</a>
-</body>
-
-</html> -->
-
-
-
-
-
 <!DOCTYPE html>
 <html lang="en">
-
-</html>
-
 <head>
-    <title>Index</title>
     <meta charset="utf-8">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurant Reservation - Your Table is Waiting</title>
 
-    <link rel="stylesheet" href="{% static 'css/indexstyle.css' %}" type="text/css" media="all" />
+    <!-- Google Fonts: Playfair Display (Serif) & Inter (Sans) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600;1,700&display=swap" rel="stylesheet">
 
-
-
-
+    <!-- Custom Stylesheet -->
+    <link rel="stylesheet" href="{% static 'css/indexstyle.css' %}" type="text/css" />
 </head>
-
 <body>
-    <!-- <nav class="navbar navbar-expand-lg navbar-light bg-info">
-        <a class="navbar-brand" href="{%url 'index' %}">Home</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span> -->
 
+    <!-- Header / Navbar -->
+    <header class="site-header">
+        <div class="site-container">
+            <nav class="nav-inner">
+                <a href="{% url 'index' %}" class="brand-logo">RestReserve</a>
 
+                <ul class="nav-links">
+                    <li><a href="#discover" class="nav-link-item">Discover</a></li>
+                    <li><a href="#how-it-works" class="nav-link-item active-nav">How it works</a></li>
+                    <li><a href="{% url 'login' %}" class="nav-link-item">For restaurants</a></li>
+                    <li><a href="#contact" class="nav-link-item">Contact</a></li>
+                </ul>
 
-    <div>
-        <nav class="navbar navbar-expand-lg navbar-light bg-transparent p-4 fixed-top">
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+                <div>
+                    {% if user.is_authenticated %}
+                        {% if user.is_staff %}
+                            <a href="{% url 'ownerhome' %}" class="btn-sign-in">Dashboard</a>
+                        {% else %}
+                            <a href="{% url 'userhome' %}" class="btn-sign-in">My Account</a>
+                        {% endif %}
+                    {% else %}
+                        <a href="{% url 'login' %}" class="btn-sign-in">Sign in</a>
+                    {% endif %}
+                </div>
+            </nav>
+        </div>
+    </header>
 
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav mr-auto">
-                    <li class="nav-item active">
-                        <a class="nav-link  text-white" href="{%url 'index' %}">Home <span class="sr-only"></span></a>
-                    </li>
-                    <li class="nav-item ">
-                        <a class="nav-link text-white" href="{% url 'login' %}" style="padding-left: 1198px;">Login</a>
-                    </li>
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="site-container">
+            <h1 class="hero-title">Your table is <span class="accent-word">waiting.</span></h1>
+            <p class="hero-subtitle">Find and book a table at restaurants near you, in a few taps.<br>Instant confirmation, free cancellation.</p>
 
-                    <li class="nav-item" id="navstyle">
-                        <a class="nav-link text-white" href="{% url 'register' %}">Register</a>
-                    </li>
+            <!-- Search Card -->
+            <div class="search-card">
+                <form action="{% if user.is_authenticated %}{% url 'userhome' %}{% else %}{% url 'login' %}{% endif %}" method="get" class="search-form-grid">
+                    <div class="field-group">
+                        <label class="field-label" for="search-location">Location</label>
+                        <input id="search-location" type="text" class="field-control" placeholder="City or neighbourhood" value="Downtown">
+                    </div>
 
-                    <li class="nav-item" id="navstyle">
-                        <a class="nav-link text-white" href="#contact">Contact Us</a>
-                    </li>
+                    <div class="field-group">
+                        <label class="field-label" for="search-date">Date</label>
+                        <input id="search-date" type="date" class="field-control" value="{% now 'Y-m-d' %}">
+                    </div>
 
+                    <div class="field-group">
+                        <label class="field-label" for="search-time">Time</label>
+                        <select id="search-time" class="field-control">
+                            <option>7:00 PM</option>
+                            <option>7:30 PM</option>
+                            <option>8:00 PM</option>
+                            <option>8:30 PM</option>
+                            <option>9:00 PM</option>
+                        </select>
+                    </div>
+
+                    <div class="field-group">
+                        <label class="field-label" for="search-guests">Guests</label>
+                        <select id="search-guests" class="field-control">
+                            <option>1 guest</option>
+                            <option selected>2 guests</option>
+                            <option>3 guests</option>
+                            <option>4 guests</option>
+                            <option>5+ guests</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn-find-table">Find a table</button>
+                </form>
+            </div>
+
+            <!-- Category Chips -->
+            <div class="chips-row">
+                <a href="{% url 'login' %}" class="chip-btn active">Italian</a>
+                <a href="{% url 'login' %}" class="chip-btn">Sushi</a>
+                <a href="{% url 'login' %}" class="chip-btn">Steakhouse</a>
+                <a href="{% url 'login' %}" class="chip-btn">Vegetarian</a>
+                <a href="{% url 'login' %}" class="chip-btn">Outdoor seating</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Available Tonight Section -->
+    <section class="section-available" id="discover">
+        <div class="site-container">
+            <div class="section-head">
+                <h2 class="section-title">Available tonight</h2>
+                <a href="{% url 'bookingstatus_for_user_url' %}" class="section-link">See all restaurants</a>
+            </div>
+
+            <div class="restaurants-grid">
+                <!-- Restaurant Card 1 -->
+                <div class="restaurant-card">
+                    <div class="restaurant-media pastel-peach"></div>
+                    <div class="restaurant-content">
+                        <h3 class="restaurant-name">Osteria Del Sole</h3>
+                        <div class="restaurant-meta">Italian · West Village · $$</div>
+                        <div class="time-slots">
+                            <a href="{% if user.is_authenticated %}{% url 'userhome' %}{% else %}{% url 'login' %}{% endif %}" class="slot-btn">6:30 PM</a>
+                            <a href="{% if user.is_authenticated %}{% url 'userhome' %}{% else %}{% url 'login' %}{% endif %}" class="slot-btn">7:15 PM</a>
+                            <a href="{% if user.is_authenticated %}{% url 'userhome' %}{% else %}{% url 'login' %}{% endif %}" class="slot-btn">8:00 PM</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Restaurant Card 2 -->
+                <div class="restaurant-card">
+                    <div class="restaurant-media pastel-sage"></div>
+                    <div class="restaurant-content">
+                        <h3 class="restaurant-name">Komorebi Sushi</h3>
+                        <div class="restaurant-meta">Japanese · Midtown · $$$</div>
+                        <div class="time-slots">
+                            <a href="{% if user.is_authenticated %}{% url 'userhome' %}{% else %}{% url 'login' %}{% endif %}" class="slot-btn">7:00 PM</a>
+                            <a href="{% if user.is_authenticated %}{% url 'userhome' %}{% else %}{% url 'login' %}{% endif %}" class="slot-btn">7:45 PM</a>
+                            <a href="{% if user.is_authenticated %}{% url 'userhome' %}{% else %}{% url 'login' %}{% endif %}" class="slot-btn">9:00 PM</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Restaurant Card 3 -->
+                <div class="restaurant-card">
+                    <div class="restaurant-media pastel-ochre"></div>
+                    <div class="restaurant-content">
+                        <h3 class="restaurant-name">The Foundry Grill</h3>
+                        <div class="restaurant-meta">Steakhouse · Soho · $$$</div>
+                        <div class="time-slots">
+                            <a href="{% if user.is_authenticated %}{% url 'userhome' %}{% else %}{% url 'login' %}{% endif %}" class="slot-btn">6:00 PM</a>
+                            <a href="{% if user.is_authenticated %}{% url 'userhome' %}{% else %}{% url 'login' %}{% endif %}" class="slot-btn">8:30 PM</a>
+                            <a href="{% if user.is_authenticated %}{% url 'userhome' %}{% else %}{% url 'login' %}{% endif %}" class="slot-btn">9:15 PM</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dynamic DB Restaurants (if added by owner) -->
+                {% for rest in restaurants %}
+                <div class="restaurant-card">
+                    <div class="restaurant-media pastel-sage"></div>
+                    <div class="restaurant-content">
+                        <h3 class="restaurant-name">{{ rest.special }}</h3>
+                        <div class="restaurant-meta">Speciality · Open {{ rest.opentime }} - {{ rest.closetime }}</div>
+                        <div class="time-slots">
+                            <a href="{% if user.is_authenticated %}{% url 'userhome' %}{% else %}{% url 'login' %}{% endif %}" class="slot-btn">{{ rest.opentime }}</a>
+                            <a href="{% if user.is_authenticated %}{% url 'userhome' %}{% else %}{% url 'login' %}{% endif %}" class="slot-btn">{{ rest.closetime }}</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Booking, Simplified Section (Dark) -->
+    <section class="section-steps" id="how-it-works">
+        <div class="site-container">
+            <h2 class="steps-title">Booking, simplified</h2>
+
+            <div class="steps-grid">
+                <!-- Step 1 -->
+                <div class="step-item">
+                    <div class="step-num">1</div>
+                    <h3 class="step-heading">Search</h3>
+                    <p class="step-desc">Choose a date, time and party size, then browse what is open near you.</p>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="step-item">
+                    <div class="step-num">2</div>
+                    <h3 class="step-heading">Pick a time</h3>
+                    <p class="step-desc">See live availability and select the slot that suits you.</p>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="step-item">
+                    <div class="step-num">3</div>
+                    <h3 class="step-heading">Get confirmed</h3>
+                    <p class="step-desc">Receive instant confirmation and a reminder before your booking.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="section-contact" id="contact">
+        <div class="site-container">
+            <div class="contact-card">
+                <h2 class="contact-title">Get in Touch</h2>
+                <p class="contact-subtitle">Have questions or want to partner your restaurant with us? Drop us a note.</p>
+
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert-notification">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+
+                <form action="{% url 'index' %}" method="post">
+                    {% csrf_token %}
+                    <div class="form-row">
+                        <label for="{{ contform.Name.id_for_label }}">Your Name</label>
+                        {{ contform.Name }}
+                        {{ contform.Name.errors }}
+                    </div>
+
+                    <div class="form-row">
+                        <label for="{{ contform.Phone.id_for_label }}">Phone Number</label>
+                        {{ contform.Phone }}
+                        {{ contform.Phone.errors }}
+                    </div>
+
+                    <div class="form-row">
+                        <label for="{{ contform.Email.id_for_label }}">Email Address</label>
+                        {{ contform.Email }}
+                        {{ contform.Email.errors }}
+                    </div>
+
+                    <div class="form-row">
+                        <label for="{{ contform.Subject.id_for_label }}">Subject / Message</label>
+                        {{ contform.Subject }}
+                        {{ contform.Subject.errors }}
+                    </div>
+
+                    <button type="submit" class="btn-contact-submit">Send Message</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="site-container">
+            <div class="footer-inner">
+                <div>&copy; {% now "Y" %} RestReserve. All rights reserved.</div>
+                <ul class="footer-links">
+                    <li><a href="#discover" class="footer-link">About</a></li>
+                    <li><a href="#contact" class="footer-link">Help</a></li>
+                    <li><a href="#" class="footer-link">Privacy</a></li>
+                    <li><a href="#" class="footer-link">Terms</a></li>
                 </ul>
             </div>
-        </nav>
-    </div>
-
-
-
-    <div id="carouselExampleSlidesOnly" class="carousel slide" data-ride="carousel">
-        <div class="carousel-inner">
-            <div class="carousel-item active">
-                <img src="{% static 'image1/b6.jpg' %}" alt="My image" class="d-block w-100" height="755px">
-            </div>
-            <div class="carousel-caption d-none d-md-block">
-                <h1>Online Restaurant Reservation</h1>
-            </div>
         </div>
-    </div>
-
-
-
-
-
-
-
-    <!-- <div class="contact" id="contact">
-        <div class="container">
-            <div >
-                <div class="contheading">
-                    <h4>Contact Us</h4>
-                </div>
-                <div class="contdetails">
-                    <form action="" method="post">
-                        {% csrf_token %}
-
-                        <div class="form-group row">
-                            <label for="inputEmail3" class="col-sm-2 col-form-label">Name</label>
-                            <div class="col-sm-10">
-                                {{contform.Name}}
-
-                            </div>
-                        </div>
-
-                        <div class="form-group row">
-                            <label for="inputEmail3" class="col-sm-2 col-form-label">Phone</label>
-                            <div class="col-sm-10">
-                                {{contform.Phone}}
-                            </div>
-                        </div>
-
-                        <div class="form-group row">
-                            <label for="inputEmail3" class="col-sm-2 col-form-label">Email</label>
-                            <div class="col-sm-10">
-                                {{contform.Email}}
-                            </div>
-                        </div>
-
-                        <div class="form-group row">
-                            <label for="inputEmail3" class="col-sm-2 col-form-label">Subject</label>
-                            <div class="col-sm-10">
-                                {{contform.Subject}}
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <div class="col-sm-10">
-                                <button type="submit" class="btn btn-primary">Send</button>
-                            </div>
-                        </div>
-                    </form>
-
-                </div>
-            </div>
-        </div>
-    </div>
-
- -->
-
-
-    <div class="contact" id="contact">
-        <form action="" method="post">
-            {% csrf_token%}
-            <div class="container">
-                <div align="center">
-                    <div class="contact-class">
-                        <h2>Contact Us</h2>
-                    </div>
-                    <br>
-                    {{contform.Name }}<br>
-                    {{contform.Name.errors}}
-
-                    <br>
-                    {{contform.Phone}}<br>
-                    {{contform.date.Phone}}
-
-                    <br>
-                    {{contform.Email}}<br>
-                    {{contform.Email.errors}}
-
-                    <label>Subject</label><br>
-                    {{contform.Subject}}<br>
-                    {{contform.Subject.errors}}
-
-                </div>
-                <div align="center">
-                    <input class="btn btn-success" type="submit" value="Submit">
-                </div>
-            </div>
-    </div>
+    </footer>
 
 </body>
-
 </html>

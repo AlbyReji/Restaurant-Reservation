@@ -1,67 +1,456 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Your Account - RestReserve (OrR)</title>
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- Google Fonts: Playfair Display (Serif) & Inter (Sans) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600;1,700&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" href="{% static 'css/registersty.css' %}" type="text/css" media="all" />
+    <style>
+        :root {
+            --bg-cream: #FAF7F2;
+            --bg-dark-panel: #241F1C;
+            --circle-rust: #B8381E;
+            --circle-subtle: rgba(255, 255, 255, 0.05);
+            --circle-ring: rgba(255, 255, 255, 0.10);
+            --text-primary: #1C1917;
+            --text-secondary: #706861;
+            --accent-rust: #B8381E;
+            --accent-rust-hover: #9E2F18;
+            --border-input: #E4DDD2;
+            --font-serif: 'Playfair Display', Georgia, 'Times New Roman', serif;
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            --radius-md: 10px;
+            --radius-sm: 8px;
+        }
 
-    <title>Document</title>
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html, body {
+            min-height: 100%;
+            background-color: var(--bg-cream);
+            font-family: var(--font-sans);
+            color: var(--text-primary);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .split-layout {
+            display: flex;
+            min-height: 100vh;
+            width: 100%;
+        }
+
+        /* ---------------- Left Form Panel ---------------- */
+        .form-side {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 44px 64px 32px 72px;
+            background-color: var(--bg-cream);
+        }
+
+        .brand-logo {
+            font-family: var(--font-serif);
+            font-size: 1.65rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            text-decoration: none;
+            letter-spacing: -0.02em;
+            display: inline-block;
+        }
+
+        .brand-logo:hover {
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+
+        .form-wrapper {
+            max-width: 440px;
+            width: 100%;
+            margin: 24px 0 36px;
+        }
+
+        .register-headline {
+            font-family: var(--font-serif);
+            font-size: 2.75rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            line-height: 1.15;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .register-headline .accent-rust {
+            color: var(--accent-rust);
+            font-style: italic;
+        }
+
+        .register-subhead {
+            font-size: 0.98rem;
+            color: var(--text-secondary);
+            margin-bottom: 28px;
+        }
+
+        /* Django Message Alerts */
+        .alert-box {
+            padding: 12px 16px;
+            border-radius: var(--radius-sm);
+            font-size: 0.88rem;
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+
+        .alert-error {
+            background-color: #FDF1ED;
+            border: 1px solid #F5C6BA;
+            color: #A32811;
+        }
+
+        .alert-success {
+            background-color: #EDF7F0;
+            border: 1px solid #B8E4C5;
+            color: #196937;
+        }
+
+        .field-row-split {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .input-group {
+            margin-bottom: 18px;
+        }
+
+        .input-label {
+            display: block;
+            font-size: 0.84rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+        }
+
+        .text-input {
+            width: 100%;
+            height: 46px;
+            padding: 0 14px;
+            border: 1px solid var(--border-input);
+            border-radius: var(--radius-md);
+            font-size: 0.95rem;
+            font-family: var(--font-sans);
+            color: var(--text-primary);
+            background-color: #FFFFFF;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            outline: none;
+        }
+
+        .text-input:focus {
+            border-color: var(--accent-rust);
+            box-shadow: 0 0 0 3px rgba(184, 56, 30, 0.12);
+        }
+
+        .field-error {
+            font-size: 0.78rem;
+            color: #C0392B;
+            margin-top: 4px;
+            line-height: 1.3;
+        }
+
+        .btn-submit {
+            width: 100%;
+            height: 48px;
+            margin-top: 8px;
+            margin-bottom: 22px;
+            background-color: var(--accent-rust);
+            color: #FFFFFF;
+            border: none;
+            border-radius: var(--radius-md);
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+        }
+
+        .btn-submit:hover {
+            background-color: var(--accent-rust-hover);
+        }
+
+        .btn-submit:active {
+            transform: translateY(1px);
+        }
+
+        .login-row {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .login-row a {
+            color: var(--text-primary);
+            font-weight: 600;
+            text-decoration: underline;
+            transition: color 0.2s;
+        }
+
+        .login-row a:hover {
+            color: var(--accent-rust);
+        }
+
+        .form-footer {
+            font-size: 0.8rem;
+            color: #9C948A;
+            margin-top: 16px;
+        }
+
+        /* ---------------- Right Hero Art Panel ---------------- */
+        .art-side {
+            flex: 1;
+            background-color: var(--bg-dark-panel);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: flex-end;
+            padding: 72px;
+        }
+
+        /* Large circular decorative graphics matching mock */
+        .circle-rust {
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background-color: var(--circle-rust);
+            border-radius: 50%;
+            left: -170px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 1;
+        }
+
+        .circle-large-top {
+            position: absolute;
+            width: 640px;
+            height: 640px;
+            border-radius: 50%;
+            background-color: var(--circle-subtle);
+            border: 1px solid var(--circle-ring);
+            top: -150px;
+            right: -150px;
+            z-index: 1;
+        }
+
+        .art-content {
+            position: relative;
+            z-index: 2;
+            max-width: 490px;
+        }
+
+        .art-heading {
+            font-family: var(--font-serif);
+            font-size: clamp(2rem, 3.8vw, 2.9rem);
+            font-weight: 700;
+            line-height: 1.2;
+            color: #FFFFFF;
+            letter-spacing: -0.01em;
+            margin-bottom: 18px;
+        }
+
+        .art-subtext {
+            font-size: 1rem;
+            color: #B5ACA3;
+            letter-spacing: 0.01em;
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .split-layout {
+                flex-direction: column;
+            }
+            .art-side {
+                min-height: 320px;
+                padding: 48px 32px;
+                order: -1;
+            }
+            .circle-rust {
+                width: 240px;
+                height: 240px;
+                left: -90px;
+            }
+            .form-side {
+                padding: 36px 28px;
+            }
+            .form-wrapper {
+                max-width: 100%;
+            }
+            .field-row-split {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+        }
+    </style>
 </head>
+<body>
 
-<body background="{% static '/image1/b8.jpg' %}">
-    <div>
-        <nav class="navbar navbar-expand-lg navbar-lightbg-transparent">
-            <a class="navbar-brand" href="{% url 'index' %}">OrR</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-              <span class="navbar-toggler-icon"></span>
-            </button>
-          
+    <div class="split-layout">
 
-          </nav>
+        <!-- Left Form Section -->
+        <main class="form-side">
+            <div>
+                <a href="{% url 'index' %}" class="brand-logo">OrR</a>
+            </div>
+
+            <div class="form-wrapper">
+                <h1 class="register-headline">Create your <span class="accent-rust">account</span></h1>
+                <p class="register-subhead">Sign up to start booking tables.</p>
+
+                <!-- Feedback / Messages -->
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert-box {% if 'error' in message.tags or 'failed' in message|lower %}alert-error{% else %}alert-success{% endif %}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+
+                <!-- Register Form -->
+                <form action="{% url 'register' %}" method="post">
+                    {% csrf_token %}
+
+                    <!-- First name & Last name -->
+                    <div class="field-row-split">
+                        <div class="input-group">
+                            <label class="input-label" for="id_first_name">First name</label>
+                            <input type="text"
+                                   name="first_name"
+                                   id="id_first_name"
+                                   class="text-input"
+                                   value="{{ form.first_name.value|default:'' }}"
+                                   required>
+                            {% if form.first_name.errors %}
+                                <div class="field-error">{{ form.first_name.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="input-group">
+                            <label class="input-label" for="id_last_name">Last name</label>
+                            <input type="text"
+                                   name="last_name"
+                                   id="id_last_name"
+                                   class="text-input"
+                                   value="{{ form.last_name.value|default:'' }}"
+                                   required>
+                            {% if form.last_name.errors %}
+                                <div class="field-error">{{ form.last_name.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Username -->
+                    <div class="input-group">
+                        <label class="input-label" for="id_username">Username</label>
+                        <input type="text"
+                               name="username"
+                               id="id_username"
+                               class="text-input"
+                               autocomplete="username"
+                               value="{{ form.username.value|default:'' }}"
+                               required>
+                        {% if form.username.errors %}
+                            <div class="field-error">{{ form.username.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Email -->
+                    <div class="input-group">
+                        <label class="input-label" for="id_email">Email</label>
+                        <input type="email"
+                               name="email"
+                               id="id_email"
+                               class="text-input"
+                               autocomplete="email"
+                               value="{{ form.email.value|default:'' }}"
+                               required>
+                        {% if form.email.errors %}
+                            <div class="field-error">{{ form.email.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Phone -->
+                    <div class="input-group">
+                        <label class="input-label" for="id_phone_no">Phone</label>
+                        <input type="text"
+                               name="phone_no"
+                               id="id_phone_no"
+                               class="text-input"
+                               value="{{ form.phone_no.value|default:'' }}">
+                        {% if form.phone_no.errors %}
+                            <div class="field-error">{{ form.phone_no.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Password & Confirm Password -->
+                    <div class="field-row-split">
+                        <div class="input-group">
+                            <label class="input-label" for="id_password1">Password</label>
+                            <input type="password"
+                                   name="password1"
+                                   id="id_password1"
+                                   class="text-input"
+                                   autocomplete="new-password"
+                                   required>
+                            {% if form.password1.errors %}
+                                <div class="field-error">{{ form.password1.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="input-group">
+                            <label class="input-label" for="id_password2">Confirm password</label>
+                            <input type="password"
+                                   name="password2"
+                                   id="id_password2"
+                                   class="text-input"
+                                   autocomplete="new-password"
+                                   required>
+                            {% if form.password2.errors %}
+                                <div class="field-error">{{ form.password2.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-submit">Create account</button>
+
+                    <div class="login-row">
+                        Already have an account? <a href="{% url 'login' %}">Log in</a>
+                    </div>
+                </form>
+            </div>
+
+            <div class="form-footer">
+                &copy; {% now "Y" %} OrR. All rights reserved.
+            </div>
+        </main>
+
+        <!-- Right Art / Showcase Section -->
+        <section class="art-side" aria-hidden="true">
+            <!-- Decorative concentric & rust geometric shapes -->
+            <div class="circle-rust"></div>
+            <div class="circle-large-top"></div>
+
+            <div class="art-content">
+                <h2 class="art-heading">Your next favourite table is one booking away.</h2>
+                <p class="art-subtext">Instant confirmation. Free cancellation.</p>
+            </div>
+        </section>
+
     </div>
-    <div class="container">
-        <div align="center">
-            <div class="heading-new"><h1>Register Here</h1></div><br><br>
-            <form action="" method="post">
-                {% csrf_token%}
 
-                
-                {{form.username}}<br>
-                {{form.username.errors}}
-
-               
-                {{form.email}}<br>
-                {{form.email.errors}}
-
-                {{form.password1}}<br>
-
-
-                {{form.password2}}<br>
-                {{form.password2.errors}}
-
-                {{form.phone_no}}<br>
-
-
-                {{form.first_name}}<br>
-
-                {{form.last_name}}<br><br>
-
-
-                <div align="center">
-                    <input class="btn btn-success" type="submit" value="Submit"></div>
-
-            </form>
-        </div>
-    </div>
 </body>
-
 </html>

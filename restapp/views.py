@@ -12,16 +12,20 @@ from restapp.models import bookingdetails,contactdetails,restdetails
 
 def index(request):
     contform = contactdetailsform()
-    if request.method =='POST':
+    if request.method == 'POST':
         contform = contactdetailsform(request.POST)
         if contform.is_valid():
             contform.save()
-            messages.success(request,'Confirmed Your Request')
+            messages.success(request, 'Thank you! Your message has been received.')
             return redirect('index')
     else:
         contform = contactdetailsform()
 
-    return render(request,'index.html',{'contform':contform})
+    restaurants = restdetails.objects.all()
+    return render(request, 'index.html', {
+        'contform': contform,
+        'restaurants': restaurants,
+    })
 
 def register(request):
     if request.method == 'POST':
@@ -29,14 +33,15 @@ def register(request):
         if form.is_valid():
             try:
                 form.save()
-                messages.success(request,'Account is created')
-                return redirect('index')
-            except:
-                pass
-
+                messages.success(request, 'Your account has been created! Please log in.')
+                return redirect('login')
+            except Exception as e:
+                messages.error(request, f'Registration failed: {e}')
+        else:
+            messages.error(request, 'Please correct the errors below.')
     else:
         form = UserRegisterForm()
-    return render(request,'register.html',{'form':form})
+    return render(request, 'register.html', {'form': form})
 
 def Login(request):
     #  if request.method == 'POST':
@@ -73,7 +78,7 @@ def Login(request):
             messages.info(request,'account done not exit plz sign in')
             
     form = AuthenticationForm()
-    return render(request,'Login.html',{'form':form})
+    return render(request, 'login.html', {'form': form})
 
 
 @login_required()

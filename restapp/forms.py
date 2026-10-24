@@ -14,7 +14,7 @@ class UserRegisterForm(UserCreationForm):
     password2 = forms.CharField(widget=forms.PasswordInput(attrs={'class':'form-control form-control','placeholder': 'confirm Password'}))
     class Meta:
         model = User
-        fields = ['username','email','password1','password2']
+        fields = ['first_name', 'last_name', 'username', 'email', 'phone_no', 'password1', 'password2']
 
 class bookingdetailsform(forms.ModelForm):
     time = forms.TimeField(widget=forms.TimeInput(attrs={'type': 'time', 'class':'form-control timepicker'}))

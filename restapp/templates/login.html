@@ -1,120 +1,385 @@
 {% load static %}
-<!--
-Author: W3layouts
-Author URL: http://w3layouts.com
--->
 <!DOCTYPE html>
-<html lang="zxx">
-
+<html lang="en">
 <head>
-	<title> Login </title>
-	<!-- Meta tag Keywords -->
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta charset="UTF-8" />
-	<meta name="keywords"
-		content="Trendz Login Form Responsive web template, Bootstrap Web Templates, Flat Web Templates, Android Compatible web template, Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, SonyEricsson, Motorola web design" />
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-	<!-- <script>
-		addEventListener("load", function () {
-			setTimeout(hideURLbar, 0);
-		}, false);
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome Back - RestReserve (OrR)</title>
 
-		function hideURLbar() {
-			window.scrollTo(0, 1);
-		}
-	</script> -->
-	<!-- //Meta tag Keywords -->
-	<!--/Style-CSS -->
-	<link rel="stylesheet" href="{% static 'css/style.css' %}" type="text/css" media="all" />
-	<link rel="stylesheet" href="{% static 'css/registersty.css' %}" type="text/css" media="all" />
+    <!-- Google Fonts: Playfair Display (Serif) & Inter (Sans) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600;1,700&display=swap" rel="stylesheet">
 
-	{% if messages %}
-	{% for message in messages%}
-	<script>
-		alert("{{message}}");
-	</script>
+    <style>
+        :root {
+            --bg-cream: #FAF7F2;
+            --bg-dark-panel: #241F1C;
+            --circle-rust: #B8381E;
+            --circle-subtle: rgba(255, 255, 255, 0.05);
+            --circle-ring: rgba(255, 255, 255, 0.10);
+            --text-primary: #1C1917;
+            --text-secondary: #706861;
+            --accent-rust: #B8381E;
+            --accent-rust-hover: #9E2F18;
+            --border-input: #E4DDD2;
+            --font-serif: 'Playfair Display', Georgia, 'Times New Roman', serif;
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            --radius-md: 10px;
+            --radius-sm: 8px;
+        }
 
-	{% endfor %}
-	{% endif%}
-	<!--//Style-CSS -->
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html, body {
+            height: 100%;
+            background-color: var(--bg-cream);
+            font-family: var(--font-sans);
+            color: var(--text-primary);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .split-layout {
+            display: flex;
+            min-height: 100vh;
+            width: 100%;
+        }
+
+        /* ---------------- Left Form Panel ---------------- */
+        .form-side {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 48px 64px 36px 72px;
+            background-color: var(--bg-cream);
+        }
+
+        .brand-logo {
+            font-family: var(--font-serif);
+            font-size: 1.65rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            text-decoration: none;
+            letter-spacing: -0.02em;
+            display: inline-block;
+        }
+
+        .brand-logo:hover {
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+
+        .form-wrapper {
+            max-width: 390px;
+            width: 100%;
+            margin: auto 0;
+            padding: 32px 0;
+        }
+
+        .login-headline {
+            font-family: var(--font-serif);
+            font-size: 2.85rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            line-height: 1.15;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+        }
+
+        .login-headline .accent-rust {
+            color: var(--accent-rust);
+            font-style: italic;
+        }
+
+        .login-subhead {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            margin-bottom: 36px;
+        }
+
+        /* Django Message Alerts */
+        .alert-box {
+            padding: 12px 16px;
+            border-radius: var(--radius-sm);
+            font-size: 0.88rem;
+            margin-bottom: 24px;
+            line-height: 1.4;
+        }
+
+        .alert-error {
+            background-color: #FDF1ED;
+            border: 1px solid #F5C6BA;
+            color: #A32811;
+        }
+
+        .alert-info {
+            background-color: #F6F4EE;
+            border: 1px solid #DFD9CE;
+            color: #5C544B;
+        }
+
+        .alert-success {
+            background-color: #EDF7F0;
+            border: 1px solid #B8E4C5;
+            color: #196937;
+        }
+
+        .input-group {
+            margin-bottom: 22px;
+        }
+
+        .label-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 8px;
+        }
+
+        .input-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .forgot-link {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            text-decoration: underline;
+            transition: color 0.2s;
+        }
+
+        .forgot-link:hover {
+            color: var(--text-primary);
+        }
+
+        .text-input {
+            width: 100%;
+            height: 48px;
+            padding: 0 16px;
+            border: 1px solid var(--border-input);
+            border-radius: var(--radius-md);
+            font-size: 0.95rem;
+            font-family: var(--font-sans);
+            color: var(--text-primary);
+            background-color: #FFFFFF;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            outline: none;
+        }
+
+        .text-input:focus {
+            border-color: var(--accent-rust);
+            box-shadow: 0 0 0 3px rgba(184, 56, 30, 0.12);
+        }
+
+        .btn-submit {
+            width: 100%;
+            height: 48px;
+            margin-top: 10px;
+            margin-bottom: 24px;
+            background-color: var(--accent-rust);
+            color: #FFFFFF;
+            border: none;
+            border-radius: var(--radius-md);
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+        }
+
+        .btn-submit:hover {
+            background-color: var(--accent-rust-hover);
+        }
+
+        .btn-submit:active {
+            transform: translateY(1px);
+        }
+
+        .signup-row {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .signup-row a {
+            color: var(--text-primary);
+            font-weight: 600;
+            text-decoration: underline;
+            transition: color 0.2s;
+        }
+
+        .signup-row a:hover {
+            color: var(--accent-rust);
+        }
+
+        .form-footer {
+            font-size: 0.8rem;
+            color: #9C948A;
+        }
+
+        /* ---------------- Right Hero Art Panel ---------------- */
+        .art-side {
+            flex: 1;
+            background-color: var(--bg-dark-panel);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: flex-end;
+            padding: 72px;
+        }
+
+        /* Large circular decorative graphics matching mock */
+        .circle-rust {
+            position: absolute;
+            width: 380px;
+            height: 380px;
+            background-color: var(--circle-rust);
+            border-radius: 50%;
+            left: -160px;
+            top: 48%;
+            transform: translateY(-50%);
+            z-index: 1;
+        }
+
+        .circle-large-top {
+            position: absolute;
+            width: 620px;
+            height: 620px;
+            border-radius: 50%;
+            background-color: var(--circle-subtle);
+            border: 1px solid var(--circle-ring);
+            top: -140px;
+            right: -140px;
+            z-index: 1;
+        }
+
+        .art-content {
+            position: relative;
+            z-index: 2;
+            max-width: 480px;
+        }
+
+        .art-heading {
+            font-family: var(--font-serif);
+            font-size: clamp(2rem, 3.8vw, 2.9rem);
+            font-weight: 700;
+            line-height: 1.2;
+            color: #FFFFFF;
+            letter-spacing: -0.01em;
+            margin-bottom: 18px;
+        }
+
+        .art-subtext {
+            font-size: 1rem;
+            color: #B5ACA3;
+            letter-spacing: 0.01em;
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .split-layout {
+                flex-direction: column;
+            }
+            .art-side {
+                min-height: 340px;
+                padding: 48px 36px;
+                order: -1;
+            }
+            .circle-rust {
+                width: 240px;
+                height: 240px;
+                left: -90px;
+            }
+            .form-side {
+                padding: 40px 32px;
+            }
+            .form-wrapper {
+                max-width: 100%;
+            }
+        }
+    </style>
 </head>
+<body>
 
-<body  background="{% static '/image1/b5.jpg' %}">
-	<!-- /login-section -->
-	<!-- 
-	<section class="w3l-forms-23">
-		<div class="forms23-block-hny">
-			<div class="wrapper">
-				<h1>Login</h1>
-			   
+    <div class="split-layout">
 
-				
-				<div class="d-grid forms23-grids">
-					<div class="form23">
-						<div class="main-bg">
-							<h6 class="sec-one"></h6>
+        <!-- Left Form Section -->
+        <main class="form-side">
+            <div>
+                <a href="{% url 'index' %}" class="brand-logo">OrR</a>
+            </div>
 
-						</div>
-						<div class="bottom-content">
+            <div class="form-wrapper">
+                <h1 class="login-headline">Welcome <span class="accent-rust">back</span></h1>
+                <p class="login-subhead">Log in to book your table.</p>
 
-							<form method="POST" action=" ">
-                                {% csrf_token %}
-								<input type="text" name="username" class="input-form" placeholder="Your Username"
-										required="required" />
-								<input type="password" name="password" class="input-form"
-										placeholder="Your Password" required="required" />
-								<button type="submit" class="loginhny-btn btn">Login</button>
-							</form>
-							<p>Not a member yet? <a href="#">Join Now!</a></p>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</section>    -->
+                <!-- Feedback / Messages -->
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert-box {% if 'invalid' in message.tags or 'error' in message.tags or 'account' in message|lower %}alert-error{% else %}alert-info{% endif %}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
 
+                <!-- Login Form -->
+                <form action="{% url 'login' %}" method="post">
+                    {% csrf_token %}
 
+                    <div class="input-group">
+                        <div class="label-row">
+                            <label class="input-label" for="username-field">Username</label>
+                        </div>
+                        <input type="text"
+                               name="username"
+                               id="username-field"
+                               class="text-input"
+                               autocomplete="username"
+                               required autofocus>
+                    </div>
 
+                    <div class="input-group">
+                        <div class="label-row">
+                            <label class="input-label" for="password-field">Password</label>
+                            <a href="#forgot" class="forgot-link" onclick="alert('Please contact the restaurant administrator or register a new account.'); return false;">Forgot password?</a>
+                        </div>
+                        <input type="password"
+                               name="password"
+                               id="password-field"
+                               class="text-input"
+                               autocomplete="current-password"
+                               required>
+                    </div>
 
-	<div>
-        <nav class="navbar navbar-expand-lg navbar-lightbg-transparent">
-            <a class="navbar-brand" style="color: black;" href="{% url 'index' %}">OrR</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-              <span class="navbar-toggler-icon"></span>
-            </button>
-          
+                    <button type="submit" class="btn-submit">Log in</button>
 
-          </nav>
+                    <div class="signup-row">
+                        New here? <a href="{% url 'register' %}">Create an account</a>
+                    </div>
+                </form>
+            </div>
+
+            <div class="form-footer">
+                &copy; {% now "Y" %} OrR. All rights reserved.
+            </div>
+        </main>
+
+        <!-- Right Art / Showcase Section -->
+        <section class="art-side" aria-hidden="true">
+            <!-- Decorative concentric & rust geometric shapes -->
+            <div class="circle-rust"></div>
+            <div class="circle-large-top"></div>
+
+            <div class="art-content">
+                <h2 class="art-heading">Great meals start with a table.</h2>
+                <p class="art-subtext">Instant confirmation. Free cancellation.</p>
+            </div>
+        </section>
+
     </div>
 
-
-
-	<div>
-		<form action=" " method="post">
-			{% csrf_token%}
-			<div class="container">
-				<div align="center">
-					<div class="login-header" >
-						<h1>Login For Booking</h1><br><br>
-					</div>
-					<label>username</label>
-					{{form.username}}
-					{{form.username.errors}}<br><br>
-
-					<label>password:</label>
-					{{form.password}}
-					{{form.password.}}<br><br>
-
-					<div align="center">
-
-						<input class="btn btn-dark" type="submit" value="Submit" style="margin-left: 59px;">
-					</div>
-		</form>
-	</div>
-
 </body>
-
 </html>
