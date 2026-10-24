@@ -12,6 +12,7 @@ urlpatterns = [
     # Web Template Views (Class-Based Views)
     path("", views.IndexView.as_view(), name="index"),
     path("ownerhome/", views.OwnerHomeView.as_view(), name="ownerhome"),
+    path("dashboard/", views.OwnerHomeView.as_view(), name="dashboard"),
     path("userhome/", views.UserHomeView.as_view(), name="userhome"),
     path("bookingstatus/", views.BookingStatusView.as_view(), name="bookingstatus"),
     path(

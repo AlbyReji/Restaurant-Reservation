@@ -1,0 +1,1575 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OrR Restaurant Reservation - Dashboard Overview</title>
+    
+    <!-- Modern Fonts: Playfair Display serif for headings, Inter for clean modern sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-page: #FAF8F5;
+            --bg-sidebar: #1E1A17;
+            --sidebar-active-bg: #2B2521;
+            --sidebar-orange-bar: #E05328;
+            --sidebar-text: #B4ACA5;
+            --sidebar-text-active: #F5EFEB;
+            
+            --card-bg: #F4EFEB;
+            --card-border: #E8DFD5;
+            --text-dark: #221E1B;
+            --text-muted: #7A726B;
+            --text-light: #9B938B;
+            
+            --table-occupied: #221E1C;
+            --table-reserved: #B54224;
+            --table-free: #F4EFEB;
+            --table-free-border: #D7CBC0;
+            --chair-color: #8C847D;
+            
+            --btn-red: #A63820;
+            --btn-red-hover: #BF4127;
+            --btn-action-bg: #ECE4DC;
+            --btn-action-border: #D8CCC0;
+            --btn-action-hover: #DFD5C9;
+            
+            --vip-badge-bg: #EFE0C9;
+            --vip-badge-text: #8C6527;
+            
+            --toast-bg: #1A1715;
+            --shadow-subtle: 0 2px 10px rgba(0, 0, 0, 0.04);
+            --transition-smooth: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-page);
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* -------------------------------------------------------------
+           SIDEBAR
+        ------------------------------------------------------------- */
+        .sidebar {
+            width: 250px;
+            background-color: var(--bg-sidebar);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 100;
+            padding: 28px 0 20px 0;
+            box-shadow: 2px 0 16px rgba(0, 0, 0, 0.12);
+        }
+
+        .sidebar-top {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+
+        .brand-logo-wrap {
+            padding: 0 28px 34px 28px;
+        }
+
+        .brand-logo {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 32px;
+            font-weight: 700;
+            color: #FFFFFF;
+            letter-spacing: -0.5px;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .sidebar-nav {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            width: 100%;
+        }
+
+        .nav-item {
+            position: relative;
+            display: flex;
+            align-items: center;
+            padding: 12px 24px 12px 26px;
+            color: var(--sidebar-text);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: var(--transition-smooth);
+            cursor: pointer;
+        }
+
+        .nav-item:hover {
+            color: #FFFFFF;
+            background-color: rgba(255, 255, 255, 0.04);
+        }
+
+        .nav-item.active {
+            color: var(--sidebar-text-active);
+            background-color: var(--sidebar-active-bg);
+            font-weight: 600;
+            margin: 0 10px;
+            border-radius: 8px;
+            padding-left: 20px;
+        }
+
+        .nav-item.active::before {
+            content: '';
+            position: absolute;
+            left: -10px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 4px;
+            height: 24px;
+            background-color: var(--sidebar-orange-bar);
+            border-radius: 0 4px 4px 0;
+        }
+
+        .nav-icon {
+            margin-right: 14px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+        }
+
+        .sidebar-footer {
+            padding: 16px 20px 8px 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: #F0ECE8;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+        }
+
+        .sidebar-footer:hover {
+            background-color: rgba(255, 255, 255, 0.04);
+        }
+
+        .manager-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .manager-avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .manager-name-wrap {
+            line-height: 1.25;
+        }
+
+        .manager-label {
+            font-size: 11px;
+            color: var(--sidebar-text);
+            display: block;
+            text-transform: capitalize;
+        }
+
+        .manager-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: #FFFFFF;
+        }
+
+        .chevron-down {
+            color: var(--sidebar-text);
+            width: 14px;
+            height: 14px;
+        }
+
+        /* -------------------------------------------------------------
+           MAIN CONTENT
+        ------------------------------------------------------------- */
+        .main-content {
+            margin-left: 250px;
+            flex: 1;
+            padding: 34px 42px 48px 42px;
+            background-color: var(--bg-page);
+            max-width: 1540px;
+        }
+
+        /* Top Header Row */
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 26px;
+        }
+
+        .header-titles h1 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 30px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 6px;
+            letter-spacing: -0.3px;
+        }
+
+        .live-date {
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .header-actions {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 12px;
+        }
+
+        .btn-new-booking {
+            background-color: var(--btn-red);
+            color: #FFFFFF;
+            border: none;
+            padding: 10px 22px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 3px 8px rgba(166, 56, 32, 0.25);
+            transition: var(--transition-smooth);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .btn-new-booking:hover {
+            background-color: var(--btn-red-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 5px 14px rgba(166, 56, 32, 0.35);
+        }
+
+        .quick-filters {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .filter-select {
+            background: transparent;
+            border: 1px solid transparent;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-dark);
+            padding: 3px 6px;
+            border-radius: 5px;
+            cursor: pointer;
+            outline: none;
+            transition: var(--transition-smooth);
+        }
+
+        .filter-select:hover {
+            background-color: rgba(0, 0, 0, 0.04);
+            border-color: var(--card-border);
+        }
+
+        /* -------------------------------------------------------------
+           STAT CARDS
+        ------------------------------------------------------------- */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            margin-bottom: 26px;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 18px 22px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            transition: var(--transition-smooth);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-subtle);
+        }
+
+        .stat-label {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 28px;
+            font-weight: 600;
+            color: var(--text-dark);
+            letter-spacing: -0.5px;
+        }
+
+        /* -------------------------------------------------------------
+           BOTTOM 2-COLUMN GRID (Floor Plan + Reservations)
+        ------------------------------------------------------------- */
+        .dashboard-main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 22px;
+            align-items: start;
+        }
+
+        .dashboard-panel {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 14px;
+            padding: 22px 24px;
+            box-shadow: var(--shadow-subtle);
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 22px;
+        }
+
+        .panel-title {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .panel-select {
+            background: #FFFFFF;
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            padding: 6px 12px;
+            font-size: 12.5px;
+            color: var(--text-dark);
+            cursor: pointer;
+            outline: none;
+            transition: var(--transition-smooth);
+        }
+
+        .panel-select:hover {
+            border-color: #B54224;
+        }
+
+        /* -------------------------------------------------------------
+           FLOOR PLAN SECTION
+        ------------------------------------------------------------- */
+        .floorplan-container {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .floor-grid-wrapper {
+            display: flex;
+            gap: 24px;
+            justify-content: space-between;
+        }
+
+        .floor-tables-layout {
+            display: grid;
+            grid-template-columns: repeat(5, 52px);
+            gap: 16px 14px;
+            justify-content: space-between;
+            flex: 1;
+        }
+
+        .special-tables-column {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            padding-left: 12px;
+            border-left: 1px dashed rgba(0, 0, 0, 0.08);
+        }
+
+        /* Table Item with stylized chairs */
+        .table-seat-wrap {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 6px 0;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .table-seat-wrap:hover {
+            transform: scale(1.06);
+        }
+
+        /* Top & Bottom decorative chair tabs */
+        .table-seat-wrap::before,
+        .table-seat-wrap::after {
+            content: '';
+            position: absolute;
+            width: 22px;
+            height: 5px;
+            background-color: var(--chair-color);
+            border-radius: 3px;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0.6;
+        }
+
+        .table-seat-wrap::before {
+            top: 0;
+        }
+
+        .table-seat-wrap::after {
+            bottom: 0;
+        }
+
+        /* Side chairs for 4-tops */
+        .table-seat-wrap.four-top .side-chair-l,
+        .table-seat-wrap.four-top .side-chair-r {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 4px;
+            height: 18px;
+            background-color: var(--chair-color);
+            border-radius: 2px;
+            opacity: 0.6;
+        }
+
+        .table-seat-wrap.four-top .side-chair-l {
+            left: -6px;
+        }
+
+        .table-seat-wrap.four-top .side-chair-r {
+            right: -6px;
+        }
+
+        .table-box {
+            width: 52px;
+            height: 52px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 600;
+            transition: var(--transition-smooth);
+            user-select: none;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+        }
+
+        /* Occupied Table (Dark) */
+        .table-box.occupied {
+            background-color: var(--table-occupied);
+            color: #FFFFFF;
+        }
+
+        /* Reserved Table (Terracotta Red) */
+        .table-box.reserved {
+            background-color: var(--table-reserved);
+            color: #FFFFFF;
+        }
+
+        /* Free Table (Off-white / card background) */
+        .table-box.free {
+            background-color: var(--table-free);
+            color: var(--text-dark);
+            border: 1px solid var(--table-free-border);
+        }
+
+        /* Special booth tables (e.g. 12, 19) */
+        .booth-table .table-box {
+            width: 58px;
+            height: 58px;
+        }
+
+        /* Legend box */
+        .floor-legend {
+            background: #EDE5DC;
+            border-radius: 10px;
+            padding: 14px 18px;
+            align-self: flex-end;
+            min-width: 130px;
+            border: 1px solid #DFCFC0;
+        }
+
+        .legend-title {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 12.5px;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .legend-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .legend-swatch {
+            width: 16px;
+            height: 16px;
+            border-radius: 4px;
+            flex-shrink: 0;
+        }
+
+        .legend-swatch.occupied {
+            background-color: var(--table-occupied);
+        }
+
+        .legend-swatch.reserved {
+            background-color: var(--table-reserved);
+        }
+
+        .legend-swatch.free {
+            background-color: var(--table-free);
+            border: 1px solid var(--table-free-border);
+        }
+
+        /* Staff Timeline Bar */
+        .staff-timeline-wrap {
+            margin-top: 14px;
+            padding-top: 16px;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .timeline-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+        }
+
+        .timeline-track {
+            height: 10px;
+            background-color: #E6DDD4;
+            border-radius: 6px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            margin-bottom: 8px;
+        }
+
+        .timeline-fill-pre {
+            width: 25%;
+            background-color: transparent;
+        }
+
+        .timeline-fill-dark {
+            width: 14%;
+            background-color: #221E1C;
+        }
+
+        .timeline-fill-red {
+            width: 10%;
+            background-color: #B54224;
+        }
+
+        .timeline-fill-dark2 {
+            width: 28%;
+            background-color: #221E1C;
+        }
+
+        .timeline-ticks {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        /* -------------------------------------------------------------
+           RIGHT PANEL: RESERVATIONS & WAITLIST
+        ------------------------------------------------------------- */
+        .reservations-layout {
+            display: grid;
+            grid-template-columns: 1.15fr 0.85fr;
+            gap: 18px;
+        }
+
+        .reservations-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .reservation-card {
+            background: #FFFFFF;
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            padding: 12px 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.02);
+            transition: var(--transition-smooth);
+            cursor: pointer;
+        }
+
+        .reservation-card:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .reservation-card::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 10px;
+            bottom: 10px;
+            width: 4px;
+            background-color: #A63820;
+            border-radius: 0 3px 3px 0;
+        }
+
+        .res-info {
+            padding-left: 8px;
+        }
+
+        .res-name {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 3px;
+        }
+
+        .res-meta {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .vip-badge {
+            background-color: var(--vip-badge-bg);
+            color: var(--vip-badge-text);
+            font-size: 11px;
+            font-weight: 700;
+            padding: 4px 9px;
+            border-radius: 12px;
+            letter-spacing: 0.5px;
+        }
+
+        /* Right Column of Right Panel: Quick Actions & Waitlist */
+        .actions-and-waitlist {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .section-subhead {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+        }
+
+        .quick-actions-btns {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .btn-action {
+            background: var(--btn-action-bg);
+            border: 1px solid var(--btn-action-border);
+            border-radius: 8px;
+            padding: 9px 14px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-dark);
+            cursor: pointer;
+            text-align: center;
+            transition: var(--transition-smooth);
+        }
+
+        .btn-action:hover {
+            background: var(--btn-action-hover);
+            border-color: #BBAEA0;
+        }
+
+        /* Waitlist list */
+        .waitlist-wrap {
+            padding-top: 6px;
+        }
+
+        .waitlist-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11.5px;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            font-weight: 500;
+        }
+
+        .waitlist-items {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .waitlist-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12.5px;
+        }
+
+        .waitlist-name {
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .waitlist-time {
+            font-size: 12px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        /* -------------------------------------------------------------
+           TOAST NOTIFICATION (BOTTOM-RIGHT)
+        ------------------------------------------------------------- */
+        .live-alert-toast {
+            position: fixed;
+            bottom: 24px;
+            right: 28px;
+            background-color: var(--toast-bg);
+            color: #FFFFFF;
+            padding: 14px 18px;
+            border-radius: 10px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 24px;
+            min-width: 250px;
+            z-index: 1000;
+            animation: slideInToast 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes slideInToast {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .toast-content-title {
+            font-size: 12px;
+            color: #A09A94;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .toast-content-msg {
+            font-size: 13.5px;
+            font-weight: 600;
+            color: #FFFFFF;
+        }
+
+        .toast-close-btn {
+            background: transparent;
+            border: none;
+            color: #8C847D;
+            cursor: pointer;
+            font-size: 16px;
+            line-height: 1;
+            padding: 2px;
+            transition: color 0.2s ease;
+        }
+
+        .toast-close-btn:hover {
+            color: #FFFFFF;
+        }
+
+        /* -------------------------------------------------------------
+           MODAL FOR "NEW BOOKING" & "TABLE DETAILS"
+        ------------------------------------------------------------- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(18, 15, 13, 0.55);
+            backdrop-filter: blur(4px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+
+        .modal-overlay.open {
+            display: flex;
+        }
+
+        .modal-card {
+            background: #FFFFFF;
+            border-radius: 14px;
+            padding: 28px 32px;
+            width: 100%;
+            max-width: 480px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            animation: modalPop 0.25s ease-out;
+        }
+
+        @keyframes modalPop {
+            from { transform: scale(0.95); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-title {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 18px;
+            color: var(--text-dark);
+        }
+
+        .form-group {
+            margin-bottom: 14px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 12.5px;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .form-input:focus {
+            border-color: var(--btn-red);
+        }
+
+        .modal-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .btn-cancel {
+            background: #EDE5DC;
+            border: none;
+            padding: 9px 18px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 13.5px;
+            cursor: pointer;
+            color: var(--text-dark);
+        }
+
+        .btn-submit {
+            background: var(--btn-red);
+            color: #FFFFFF;
+            border: none;
+            padding: 9px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 13.5px;
+            cursor: pointer;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .dashboard-main-grid {
+                grid-template-columns: 1fr;
+            }
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 820px) {
+            .sidebar {
+                width: 70px;
+                padding: 20px 0;
+            }
+            .brand-logo-wrap {
+                padding: 0 16px 24px 16px;
+            }
+            .nav-text, .brand-logo, .manager-name-wrap, .chevron-down {
+                display: none;
+            }
+            .nav-item {
+                padding: 12px;
+                justify-content: center;
+            }
+            .nav-icon {
+                margin-right: 0;
+            }
+            .main-content {
+                margin-left: 70px;
+                padding: 20px;
+            }
+            .reservations-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- -------------------------------------------------------------
+         SIDEBAR NAVIGATION
+    -------------------------------------------------------------- -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-top">
+            <div class="brand-logo-wrap">
+                <a href="{% url 'index' %}" class="brand-logo">OrR</a>
+            </div>
+
+            <ul class="sidebar-nav">
+                <li>
+                    <a href="{% url 'ownerhome' %}" class="nav-item active" id="nav-dashboard">
+                        <span class="nav-icon">
+                            <!-- Dashboard 4-box grid icon -->
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                                <rect x="3" y="3" width="7" height="7" rx="1.5" />
+                                <rect x="14" y="3" width="7" height="7" rx="1.5" />
+                                <rect x="14" y="14" width="7" height="7" rx="1.5" />
+                                <rect x="3" y="14" width="7" height="7" rx="1.5" />
+                            </svg>
+                        </span>
+                        <span class="nav-text">Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#floorplan" class="nav-item" id="nav-floorplan">
+                        <span class="nav-icon">
+                            <!-- Floor plan icon -->
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="3" width="7" height="7" rx="1.5" />
+                                <rect x="14" y="3" width="7" height="7" rx="1.5" />
+                                <rect x="3" y="14" width="7" height="7" rx="1.5" />
+                            </svg>
+                        </span>
+                        <span class="nav-text">Live Floor Plan</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'bookingstatus' %}" class="nav-item" id="nav-reservations">
+                        <span class="nav-icon">
+                            <!-- Calendar icon -->
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="4" width="18" height="18" rx="2" />
+                                <line x1="16" y1="2" x2="16" y2="6" />
+                                <line x1="8" y1="2" x2="8" y2="6" />
+                                <line x1="3" y1="10" x2="21" y2="10" />
+                            </svg>
+                        </span>
+                        <span class="nav-text">Reservations</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'contact' %}" class="nav-item" id="nav-guestbook">
+                        <span class="nav-icon">
+                            <!-- Book / inquiries icon -->
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+                            </svg>
+                        </span>
+                        <span class="nav-text">Guest Book</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#waitlist-section" class="nav-item" id="nav-waitlist">
+                        <span class="nav-icon">
+                            <!-- List icon -->
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="8" y1="6" x2="21" y2="6"/>
+                                <line x1="8" y1="12" x2="21" y2="12"/>
+                                <line x1="8" y1="18" x2="21" y2="18"/>
+                                <circle cx="4" cy="6" r="1.5"/>
+                                <circle cx="4" cy="12" r="1.5"/>
+                                <circle cx="4" cy="18" r="1.5"/>
+                            </svg>
+                        </span>
+                        <span class="nav-text">Waitlist</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'Addrestdetails' %}" class="nav-item" id="nav-settings">
+                        <span class="nav-icon">
+                            <!-- Gear icon -->
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="3"/>
+                                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                            </svg>
+                        </span>
+                        <span class="nav-text">Settings</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Manager Footer in Sidebar -->
+        <div class="sidebar-footer" id="manager-profile-btn" title="View Manager Profile">
+            <div class="manager-info">
+                <img src="{% static 'image1/manager_priya.jpg' %}" alt="Manager Priya" class="manager-avatar" onerror="this.src='https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=120&q=80'">
+                <div class="manager-name-wrap">
+                    <span class="manager-label">Manager:</span>
+                    <span class="manager-name">Priya</span>
+                </div>
+            </div>
+            <svg class="chevron-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"/>
+            </svg>
+        </div>
+    </aside>
+
+    <!-- -------------------------------------------------------------
+         MAIN DASHBOARD
+    -------------------------------------------------------------- -->
+    <main class="main-content">
+        <!-- Top Section -->
+        <header class="dashboard-header">
+            <div class="header-titles">
+                <h1>Dashboard Overview</h1>
+                <p class="live-date" id="live-date-display">Live date: Jan 23, 2026</p>
+            </div>
+            <div class="header-actions">
+                <button class="btn-new-booking" id="open-booking-modal-btn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <line x1="12" y1="5" x2="12" y2="19"/>
+                        <line x1="5" y1="12" x2="19" y2="12"/>
+                    </svg>
+                    New Booking
+                </button>
+                <div class="quick-filters">
+                    <span>Quick Filters</span>
+                    <select class="filter-select" id="quick-filter-select">
+                        <option value="all">All parties</option>
+                        <option value="vip">VIP Only</option>
+                        <option value="seated">Seated</option>
+                        <option value="waitlist">Waitlist</option>
+                    </select>
+                </div>
+            </div>
+        </header>
+
+        <!-- KPI Metrics Grid -->
+        <section class="stats-grid">
+            <div class="stat-card">
+                <span class="stat-label">Today's Covers</span>
+                <span class="stat-value" id="stat-covers">214 / 280</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-label">Active Tables</span>
+                <span class="stat-value" id="stat-active-tables">18 / 24</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-label">Waitlist</span>
+                <span class="stat-value" id="stat-waitlist">4 parties</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-label">No-Shows</span>
+                <span class="stat-value" id="stat-noshows">1</span>
+            </div>
+        </section>
+
+        <!-- Main Workspace: 2 Panels Grid -->
+        <div class="dashboard-main-grid">
+
+            <!-- LEFT PANEL: Interactive Live Floor Plan -->
+            <div class="dashboard-panel" id="floorplan">
+                <div class="panel-header">
+                    <h2 class="panel-title">Interactive Live Floor Plan</h2>
+                    <select class="panel-select" id="floor-filter">
+                        <option value="all">All sections</option>
+                        <option value="main">Main Dining</option>
+                        <option value="patio">Patio Area</option>
+                        <option value="private">Private Room</option>
+                    </select>
+                </div>
+
+                <div class="floorplan-container">
+                    <div class="floor-grid-wrapper">
+                        <!-- Tables Grid: 5 columns matching screenshot layout -->
+                        <div class="floor-tables-layout" id="tables-container">
+                            
+                            <!-- ROW 1: 1 (Occupied), 8 (Reserved), 9 (Occupied), 10 (Free), 11 (Occupied) -->
+                            <div class="table-seat-wrap four-top" data-table="1" data-status="occupied" data-cap="4">
+                                <span class="side-chair-l"></span>
+                                <div class="table-box occupied">1</div>
+                                <span class="side-chair-r"></span>
+                            </div>
+
+                            <div class="table-seat-wrap four-top" data-table="8" data-status="reserved" data-cap="4">
+                                <span class="side-chair-l"></span>
+                                <div class="table-box reserved">8</div>
+                                <span class="side-chair-r"></span>
+                            </div>
+
+                            <div class="table-seat-wrap four-top" data-table="9" data-status="occupied" data-cap="4">
+                                <span class="side-chair-l"></span>
+                                <div class="table-box occupied">9</div>
+                                <span class="side-chair-r"></span>
+                            </div>
+
+                            <div class="table-seat-wrap four-top" data-table="10" data-status="free" data-cap="4">
+                                <span class="side-chair-l"></span>
+                                <div class="table-box free">10</div>
+                                <span class="side-chair-r"></span>
+                            </div>
+
+                            <div class="table-seat-wrap four-top" data-table="11" data-status="occupied" data-cap="4">
+                                <span class="side-chair-l"></span>
+                                <div class="table-box occupied">11</div>
+                                <span class="side-chair-r"></span>
+                            </div>
+
+                            <!-- ROW 2: 14 (Free), 15 (Free), 16 (Reserved), 17 (Occupied), 18 (Free) -->
+                            <div class="table-seat-wrap four-top" data-table="14" data-status="free" data-cap="4">
+                                <span class="side-chair-l"></span>
+                                <div class="table-box free">14</div>
+                                <span class="side-chair-r"></span>
+                            </div>
+
+                            <div class="table-seat-wrap four-top" data-table="15" data-status="free" data-cap="4">
+                                <span class="side-chair-l"></span>
+                                <div class="table-box free">15</div>
+                                <span class="side-chair-r"></span>
+                            </div>
+
+                            <div class="table-seat-wrap four-top" data-table="16" data-status="reserved" data-cap="4">
+                                <span class="side-chair-l"></span>
+                                <div class="table-box reserved">16</div>
+                                <span class="side-chair-r"></span>
+                            </div>
+
+                            <div class="table-seat-wrap four-top" data-table="17" data-status="occupied" data-cap="4">
+                                <span class="side-chair-l"></span>
+                                <div class="table-box occupied">17</div>
+                                <span class="side-chair-r"></span>
+                            </div>
+
+                            <div class="table-seat-wrap four-top" data-table="18" data-status="free" data-cap="4">
+                                <span class="side-chair-l"></span>
+                                <div class="table-box free">18</div>
+                                <span class="side-chair-r"></span>
+                            </div>
+
+                            <!-- ROW 3: 21 (Occupied), 22 (Reserved), 23 (Free), 24 (Free), 25 (Free) -->
+                            <div class="table-seat-wrap four-top" data-table="21" data-status="occupied" data-cap="4">
+                                <span class="side-chair-l"></span>
+                                <div class="table-box occupied">21</div>
+                                <span class="side-chair-r"></span>
+                            </div>
+
+                            <div class="table-seat-wrap four-top" data-table="22" data-status="reserved" data-cap="4">
+                                <span class="side-chair-l"></span>
+                                <div class="table-box reserved">22</div>
+                                <span class="side-chair-r"></span>
+                            </div>
+
+                            <div class="table-seat-wrap four-top" data-table="23" data-status="free" data-cap="4">
+                                <span class="side-chair-l"></span>
+                                <div class="table-box free">23</div>
+                                <span class="side-chair-r"></span>
+                            </div>
+
+                            <div class="table-seat-wrap four-top" data-table="24" data-status="free" data-cap="4">
+                                <span class="side-chair-l"></span>
+                                <div class="table-box free">24</div>
+                                <span class="side-chair-r"></span>
+                            </div>
+
+                            <div class="table-seat-wrap four-top" data-table="25" data-status="free" data-cap="4">
+                                <span class="side-chair-l"></span>
+                                <div class="table-box free">25</div>
+                                <span class="side-chair-r"></span>
+                            </div>
+                        </div>
+
+                        <!-- Special Booth Tables (12, 19) + Floor Key Legend -->
+                        <div class="special-tables-column">
+                            <div class="table-seat-wrap booth-table" data-table="12" data-status="free" data-cap="6">
+                                <div class="table-box free">12</div>
+                            </div>
+
+                            <div class="table-seat-wrap booth-table" data-table="19" data-status="free" data-cap="6">
+                                <div class="table-box free">19</div>
+                            </div>
+
+                            <!-- Key / Legend -->
+                            <div class="floor-legend">
+                                <div class="legend-title">Key</div>
+                                <div class="legend-item">
+                                    <span class="legend-swatch occupied"></span>
+                                    <span>Occupied</span>
+                                </div>
+                                <div class="legend-item">
+                                    <span class="legend-swatch reserved"></span>
+                                    <span>Reserved</span>
+                                </div>
+                                <div class="legend-item">
+                                    <span class="legend-swatch free"></span>
+                                    <span>Free</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Staff Timeline -->
+                    <div class="staff-timeline-wrap">
+                        <div class="timeline-label">Staff timeline</div>
+                        <div class="timeline-track">
+                            <div class="timeline-fill-pre"></div>
+                            <div class="timeline-fill-dark"></div>
+                            <div class="timeline-fill-red"></div>
+                            <div class="timeline-fill-dark2"></div>
+                        </div>
+                        <div class="timeline-ticks">
+                            <span>10am</span>
+                            <span>10am</span>
+                            <span>12am</span>
+                            <span>10pm</span>
+                            <span>2am</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT PANEL: Upcoming Reservations & Waitlist -->
+            <div class="dashboard-panel" id="reservations-panel">
+                <div class="panel-header">
+                    <h2 class="panel-title">Upcoming Reservations &amp; Waitlist</h2>
+                </div>
+
+                <div class="reservations-layout">
+                    <!-- Reservation Cards List -->
+                    <div class="reservations-list" id="reservation-cards-list">
+                        <!-- Card 1 -->
+                        <div class="reservation-card" data-guest="Arjun M." data-table="12" data-time="8:00 PM" data-guests="4">
+                            <div class="res-info">
+                                <div class="res-name">Arjun M.</div>
+                                <div class="res-meta">4 guests &bull; 8:00 PM &bull; Table 12</div>
+                            </div>
+                            <span class="vip-badge">VIP</span>
+                        </div>
+
+                        <!-- Card 2 -->
+                        <div class="reservation-card" data-guest="Gama A." data-table="15" data-time="8:00 PM" data-guests="4">
+                            <div class="res-info">
+                                <div class="res-name">Gama A.</div>
+                                <div class="res-meta">4 guests &bull; 8:00 PM &bull; Table 15</div>
+                            </div>
+                            <span class="vip-badge">VIP</span>
+                        </div>
+
+                        <!-- Card 3 -->
+                        <div class="reservation-card" data-guest="Arjun M." data-table="20" data-time="8:00 PM" data-guests="4">
+                            <div class="res-info">
+                                <div class="res-name">Arjun M.</div>
+                                <div class="res-meta">4 guests &bull; 8:00 PM &bull; Table 20</div>
+                            </div>
+                            <span class="vip-badge">VIP</span>
+                        </div>
+
+                        <!-- Card 4 -->
+                        <div class="reservation-card" data-guest="Rither C." data-table="21" data-time="8:00 PM" data-guests="4">
+                            <div class="res-info">
+                                <div class="res-name">Rither C.</div>
+                                <div class="res-meta">4 guests &bull; 8:00 PM &bull; Table 21</div>
+                            </div>
+                            <span class="vip-badge">VIP</span>
+                        </div>
+
+                        <!-- Card 5 -->
+                        <div class="reservation-card" data-guest="Arjun J." data-table="23" data-time="8:00 PM" data-guests="4">
+                            <div class="res-info">
+                                <div class="res-name">Arjun J.</div>
+                                <div class="res-meta">4 guests &bull; 8:00 PM &bull; Table 23</div>
+                            </div>
+                            <span class="vip-badge">VIP</span>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Quick Actions & Digital Waitlist -->
+                    <div class="actions-and-waitlist" id="waitlist-section">
+                        <!-- Quick Actions -->
+                        <div>
+                            <div class="section-subhead">Quick Actions</div>
+                            <div class="quick-actions-btns">
+                                <button class="btn-action" id="action-checkin">Check-in</button>
+                                <button class="btn-action" id="action-seated">Seated</button>
+                                <button class="btn-action" id="action-cancel">Cancel</button>
+                            </div>
+                        </div>
+
+                        <!-- Digital Waitlist -->
+                        <div class="waitlist-wrap">
+                            <div class="section-subhead">Digital Waitlist</div>
+                            <div class="waitlist-header">
+                                <span>Queued guest</span>
+                                <span>Wait time</span>
+                            </div>
+                            <ul class="waitlist-items" id="waitlist-items-container">
+                                <li class="waitlist-item">
+                                    <span class="waitlist-name">Jaranth Arjun M.</span>
+                                    <span class="waitlist-time">12 min</span>
+                                </li>
+                                <li class="waitlist-item">
+                                    <span class="waitlist-name">Aniyn Kothera</span>
+                                    <span class="waitlist-time">21 min</span>
+                                </li>
+                                <li class="waitlist-item">
+                                    <span class="waitlist-name">Natac Ranne</span>
+                                    <span class="waitlist-time">22 min</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- -------------------------------------------------------------
+         LIVE ALERT TOAST NOTIFICATION
+    -------------------------------------------------------------- -->
+    <div class="live-alert-toast" id="live-toast">
+        <div>
+            <div class="toast-content-title">Live alerts</div>
+            <div class="toast-content-msg" id="toast-message">New Walk-in: Party of 4</div>
+        </div>
+        <button class="toast-close-btn" id="close-toast-btn" aria-label="Dismiss alert">&times;</button>
+    </div>
+
+    <!-- -------------------------------------------------------------
+         MODAL: NEW BOOKING
+    -------------------------------------------------------------- -->
+    <div class="modal-overlay" id="booking-modal">
+        <div class="modal-card">
+            <h3 class="modal-title">Create Reservation</h3>
+            <form id="new-booking-form" method="post" action="{% url 'ownerhome' %}">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label class="form-label" for="booking-guest">Guest Name</label>
+                    <input type="text" class="form-input" id="booking-guest" name="guest_name" placeholder="e.g. Priya Sharma" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="booking-party">Party Size</label>
+                    <input type="number" class="form-input" id="booking-party" name="totalpeople" min="1" max="20" value="4" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="booking-date">Date</label>
+                    <input type="date" class="form-input" id="booking-date" name="date" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="booking-time">Time</label>
+                    <input type="time" class="form-input" id="booking-time" name="time" value="20:00" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="booking-table">Table Number</label>
+                    <input type="number" class="form-input" id="booking-table" name="table_num" min="1" max="25" value="12">
+                </div>
+                <div class="modal-buttons">
+                    <button type="button" class="btn-cancel" id="cancel-booking-btn">Cancel</button>
+                    <button type="submit" class="btn-submit">Confirm Booking</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- -------------------------------------------------------------
+         INTERACTIVE JAVASCRIPT
+    -------------------------------------------------------------- -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Set current date if needed
+            const today = new Date();
+            const dateOptions = { month: 'short', day: 'numeric', year: 'numeric' };
+            const dateEl = document.getElementById('live-date-display');
+            if (dateEl) {
+                dateEl.textContent = 'Live date: ' + today.toLocaleDateString('en-US', dateOptions);
+            }
+            const dateInput = document.getElementById('booking-date');
+            if (dateInput) {
+                dateInput.value = today.toISOString().split('T')[0];
+            }
+
+            // Toast Dismissal
+            const toast = document.getElementById('live-toast');
+            const toastClose = document.getElementById('close-toast-btn');
+            if (toastClose) {
+                toastClose.addEventListener('click', function () {
+                    toast.style.display = 'none';
+                });
+            }
+
+            // Booking Modal
+            const modal = document.getElementById('booking-modal');
+            const openModalBtn = document.getElementById('open-booking-modal-btn');
+            const closeModalBtn = document.getElementById('cancel-booking-btn');
+
+            if (openModalBtn) {
+                openModalBtn.addEventListener('click', () => modal.classList.add('open'));
+            }
+            if (closeModalBtn) {
+                closeModalBtn.addEventListener('click', () => modal.classList.remove('open'));
+            }
+            modal.addEventListener('click', function (e) {
+                if (e.target === modal) modal.classList.remove('open');
+            });
+
+            // Table Selection & State Toggle
+            const tableWraps = document.querySelectorAll('.table-seat-wrap');
+            let selectedTable = null;
+
+            tableWraps.forEach(wrap => {
+                wrap.addEventListener('click', function () {
+                    const tableNum = this.dataset.table;
+                    const status = this.dataset.status;
+                    const tableBox = this.querySelector('.table-box');
+
+                    // Interactive toggle for testing / live operations
+                    if (status === 'free') {
+                        this.dataset.status = 'reserved';
+                        tableBox.className = 'table-box reserved';
+                        showToast(`Table ${tableNum} marked as Reserved`);
+                    } else if (status === 'reserved') {
+                        this.dataset.status = 'occupied';
+                        tableBox.className = 'table-box occupied';
+                        showToast(`Table ${tableNum} is now Occupied`);
+                    } else {
+                        this.dataset.status = 'free';
+                        tableBox.className = 'table-box free';
+                        showToast(`Table ${tableNum} cleared (Free)`);
+                    }
+                    updateActiveTableCounts();
+                });
+            });
+
+            // Reservation Cards Selection
+            const resCards = document.querySelectorAll('.reservation-card');
+            let activeReservation = null;
+
+            resCards.forEach(card => {
+                card.addEventListener('click', function () {
+                    resCards.forEach(c => c.style.borderColor = 'var(--card-border)');
+                    this.style.borderColor = '#A63820';
+                    activeReservation = this;
+                    showToast(`Selected reservation: ${this.dataset.guest}`);
+                });
+            });
+
+            // Quick Actions
+            document.getElementById('action-checkin')?.addEventListener('click', function () {
+                if (activeReservation) {
+                    const guest = activeReservation.dataset.guest;
+                    showToast(`Checked in: ${guest}`);
+                } else {
+                    showToast('Please select a reservation card first');
+                }
+            });
+
+            document.getElementById('action-seated')?.addEventListener('click', function () {
+                if (activeReservation) {
+                    const tableNum = activeReservation.dataset.table;
+                    const tableEl = document.querySelector(`.table-seat-wrap[data-table="${tableNum}"]`);
+                    if (tableEl) {
+                        tableEl.dataset.status = 'occupied';
+                        tableEl.querySelector('.table-box').className = 'table-box occupied';
+                        updateActiveTableCounts();
+                    }
+                    showToast(`Seated: ${activeReservation.dataset.guest} at Table ${tableNum}`);
+                } else {
+                    showToast('Please select a reservation card first');
+                }
+            });
+
+            document.getElementById('action-cancel')?.addEventListener('click', function () {
+                if (activeReservation) {
+                    const guest = activeReservation.dataset.guest;
+                    activeReservation.style.opacity = '0.4';
+                    showToast(`Reservation cancelled for ${guest}`);
+                } else {
+                    showToast('Please select a reservation card first');
+                }
+            });
+
+            function showToast(msg) {
+                const toastMsg = document.getElementById('toast-message');
+                if (toast && toastMsg) {
+                    toastMsg.textContent = msg;
+                    toast.style.display = 'flex';
+                }
+            }
+
+            function updateActiveTableCounts() {
+                const occupiedCount = document.querySelectorAll('.table-box.occupied').length;
+                const totalTables = document.querySelectorAll('.table-box').length;
+                const activeEl = document.getElementById('stat-active-tables');
+                if (activeEl) {
+                    activeEl.textContent = `${occupiedCount} / ${totalTables}`;
+                }
+            }
+        });
+    </script>
+</body>
+</html>

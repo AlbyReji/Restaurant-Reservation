@@ -103,7 +103,27 @@ class OwnerHomeView(View):
     template_name = "ownerhome.html"
 
     def get(self, request):
-        return render(request, self.template_name)
+        bookings = bookingdetails.objects.all().order_by("-date", "-time")[:10]
+        return render(request, self.template_name, {"bookings": bookings})
+
+    def post(self, request):
+        guest_name = request.POST.get("guest_name", "Walk-in Guest")
+        party = request.POST.get("totalpeople", "4")
+        date = request.POST.get("date")
+        time = request.POST.get("time")
+
+        from django.contrib.auth.models import User
+
+        user = request.user if request.user.is_authenticated else User.objects.first()
+        if user and date and time:
+            bookingdetails.objects.create(
+                user=user,
+                date=date,
+                time=time,
+                totalpeople=party,
+            )
+            messages.success(request, f"Booking created for {guest_name}!")
+        return redirect("ownerhome")
 
 
 # ----------------------------------------------------------------------
