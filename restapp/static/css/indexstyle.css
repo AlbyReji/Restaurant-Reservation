@@ -108,11 +108,17 @@ body {
   font-weight: 600;
 }
 
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
 .btn-sign-in {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 8px 24px;
+  padding: 8px 22px;
   border: 1px solid var(--text-primary);
   border-radius: var(--radius-pill);
   color: var(--text-primary);
@@ -126,6 +132,43 @@ body {
 .btn-sign-in:hover {
   background-color: var(--text-primary);
   color: #FFFFFF;
+  text-decoration: none;
+}
+
+.btn-register {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 22px;
+  border: 1px solid var(--accent-rust);
+  border-radius: var(--radius-pill);
+  color: #FFFFFF;
+  background-color: var(--accent-rust);
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.btn-register:hover {
+  background-color: var(--accent-rust-hover);
+  border-color: var(--accent-rust-hover);
+  color: #FFFFFF;
+  text-decoration: none;
+  transform: translateY(-1px);
+}
+
+.btn-nav-link {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-decoration: none;
+  padding: 8px 12px;
+  transition: color 0.2s ease;
+}
+
+.btn-nav-link:hover {
+  color: var(--accent-rust);
   text-decoration: none;
 }
 

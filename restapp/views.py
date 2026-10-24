@@ -60,7 +60,11 @@ class UserHomeView(LoginRequiredMixin, View):
 
     def get(self, request):
         form1 = bookingdetailsform()
-        return render(request, self.template_name, {'form1': form1})
+        latest_booking = bookingdetails.objects.filter(user=request.user).order_by('-id').first()
+        return render(request, self.template_name, {
+            'form1': form1,
+            'latest_booking': latest_booking,
+        })
 
     def post(self, request):
         form1 = bookingdetailsform(request.POST)

@@ -29,15 +29,17 @@
                     <li><a href="#contact" class="nav-link-item">Contact</a></li>
                 </ul>
 
-                <div>
+                <div class="nav-actions">
                     {% if user.is_authenticated %}
                         {% if user.is_staff %}
                             <a href="{% url 'ownerhome' %}" class="btn-sign-in">Dashboard</a>
                         {% else %}
                             <a href="{% url 'userhome' %}" class="btn-sign-in">My Account</a>
                         {% endif %}
+                        <a href="{% url 'logout' %}" class="btn-nav-link">Log out</a>
                     {% else %}
                         <a href="{% url 'login' %}" class="btn-sign-in">Sign in</a>
+                        <a href="{% url 'register' %}" class="btn-register">Register</a>
                     {% endif %}
                 </div>
             </nav>

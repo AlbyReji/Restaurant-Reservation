@@ -43,7 +43,8 @@ class LoginView(View):
 
         if user is not None:
             login(request, user)
-            messages.success(request, f'Welcome {username}!')
+            display_name = user.get_full_name() or user.username
+            messages.success(request, f'Welcome back, {display_name}!')
             if user.is_staff:
                 return redirect('ownerhome')
             return redirect('userhome')
