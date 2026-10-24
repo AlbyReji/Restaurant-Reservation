@@ -1,184 +1,205 @@
-from django.shortcuts import render,redirect
-from django.contrib.auth import authenticate,login
-from django.contrib.auth.forms import AuthenticationForm
-from .forms import UserRegisterForm,bookingdetailsform,contactdetailsform,restdetailsform
+from django.shortcuts import render, redirect, get_object_or_404
+from django.urls import reverse_lazy
+from django.views import View
+from django.views.generic import TemplateView, ListView, CreateView, UpdateView
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib import messages
 
-from django.contrib.auth.decorators import login_required
+from restapp.models import bookingdetails, contactdetails, restdetails
+from restapp.forms import (
+    bookingdetailsform,
+    contactdetailsform,
+    restdetailsform
+)
 
-from restapp.models import bookingdetails,contactdetails,restdetails
 
-# Create your views here.
+class StaffRequiredMixin(LoginRequiredMixin, UserPassesTestMixin):
+    """Restricts view access to staff / restaurant owner accounts."""
+    def test_func(self):
+        return self.request.user.is_staff
 
-def index(request):
-    contform = contactdetailsform()
-    if request.method == 'POST':
+    def handle_no_permission(self):
+        messages.error(self.request, "Access restricted to restaurant staff.")
+        return redirect('login')
+
+
+# ----------------------------------------------------------------------
+# 1. Index / Landing Page View
+# ----------------------------------------------------------------------
+class IndexView(View):
+    template_name = 'index.html'
+
+    def get(self, request):
+        contform = contactdetailsform()
+        restaurants = restdetails.objects.all()
+        return render(request, self.template_name, {
+            'contform': contform,
+            'restaurants': restaurants,
+        })
+
+    def post(self, request):
         contform = contactdetailsform(request.POST)
         if contform.is_valid():
             contform.save()
             messages.success(request, 'Thank you! Your message has been received.')
             return redirect('index')
-    else:
-        contform = contactdetailsform()
 
-    restaurants = restdetails.objects.all()
-    return render(request, 'index.html', {
-        'contform': contform,
-        'restaurants': restaurants,
-    })
-
-def register(request):
-    if request.method == 'POST':
-        form = UserRegisterForm(request.POST)
-        if form.is_valid():
-            try:
-                form.save()
-                messages.success(request, 'Your account has been created! Please log in.')
-                return redirect('login')
-            except Exception as e:
-                messages.error(request, f'Registration failed: {e}')
-        else:
-            messages.error(request, 'Please correct the errors below.')
-    else:
-        form = UserRegisterForm()
-    return render(request, 'register.html', {'form': form})
-
-def Login(request):
-    #  if request.method == 'POST':
-    #     username = request.POST['username']
-    #     password = request.POST['password']
-
-    #     user = authenticate(username=username, password=password)
-
-    #     if user is not None:
-    #         if user.is_staff == True:
-    #             return redirect('ownerhome')
-    #         else:
-    #             form =login(request,user)
-    #             messages.success(request,f'welcome {username} !!')
-    #             return redirect('userhome')
-    #     else:
-    #         messages.info(request, 'invalid username and password')
-    #         return redirect('login')
-       
-    #  else:
-    #     return render(request,'Login.html')
-    if request.method =='POST':
-        username = request.POST['username']
-        password = request.POST['password']
-        user = authenticate(request,username = username,password = password)
-        if user is not None:
-            if user.is_staff == True:
-                return redirect('ownerhome')
-            else:
-                form = login(request,user)
-                messages.success(request,f'welcome {username} !!')
-                return redirect('userhome') 
-        else:
-            messages.info(request,'account done not exit plz sign in')
-            
-    form = AuthenticationForm()
-    return render(request, 'login.html', {'form': form})
+        restaurants = restdetails.objects.all()
+        return render(request, self.template_name, {
+            'contform': contform,
+            'restaurants': restaurants,
+        })
 
 
-@login_required()
-def userhome(request):
-    form1 = bookingdetailsform()
-    if request.method == 'POST':
+
+# ----------------------------------------------------------------------
+# 4. User Home / Booking View (Customer)
+# ----------------------------------------------------------------------
+class UserHomeView(LoginRequiredMixin, View):
+    template_name = 'userhome.html'
+
+    def get(self, request):
+        form1 = bookingdetailsform()
+        return render(request, self.template_name, {'form1': form1})
+
+    def post(self, request):
         form1 = bookingdetailsform(request.POST)
-        if form1.is_valid:
+        if form1.is_valid():
             try:
                 profile = form1.save(commit=False)
                 profile.user = request.user
                 profile.save()
-                # form1.save()
-                messages.success(request,'Your booking is pending!!!  Check your Email or SMS for conformation')
+                messages.success(request, 'Your booking is pending! Check your email or SMS for confirmation.')
                 return redirect('userhome')
-            except:
-                pass
-    else:
-        form1 = bookingdetailsform()
+            except Exception as e:
+                messages.error(request, f'Could not save booking: {e}')
+        else:
+            messages.error(request, 'Please correct the booking details.')
+
+        return render(request, self.template_name, {'form1': form1})
 
 
-    return render(request,'userhome.html',{'form1':form1})
+# ----------------------------------------------------------------------
+# 5. Owner Home View (Staff)
+# ----------------------------------------------------------------------
+class OwnerHomeView(View):
+    template_name = 'ownerhome.html'
+
+    def get(self, request):
+        return render(request, self.template_name)
 
 
-def ownerhome(request):
-    return render(request,'ownerhome.html')
+# ----------------------------------------------------------------------
+# 6. Booking Status View (Staff)
+# ----------------------------------------------------------------------
+class BookingStatusView(View):
+    template_name = 'bookingstatus.html'
 
-def bookingstatus(request):
-
-    booking = bookingdetails.objects.all()
-    
-    return render(request,'bookingstatus.html',{'booking':booking})
-
-def bookingstatus_for_user(request):
-
-    cont1 = restdetails.objects.all()
-
-    return render(request,'bookingstatus-user.html',{'cont1':cont1})
+    def get(self, request):
+        booking = bookingdetails.objects.all()
+        return render(request, self.template_name, {'booking': booking})
 
 
-def contact(request):
+# ----------------------------------------------------------------------
+# 7. Booking Status View (Customer / Public restaurant schedule)
+# ----------------------------------------------------------------------
+class BookingStatusUserView(View):
+    template_name = 'bookingstatus-user.html'
 
-    cont = contactdetails.objects.all()
+    def get(self, request):
+        cont1 = restdetails.objects.all()
+        return render(request, self.template_name, {'cont1': cont1})
 
-    return render(request,'contact.html',{'cont':cont})
 
-def delete(request,id):
-    booking = bookingdetails.objects.get(id=id)
-    booking.delete()
-    return redirect('/bookingstatus')
+# ----------------------------------------------------------------------
+# 8. Contact List View (Staff)
+# ----------------------------------------------------------------------
+class ContactListView(View):
+    template_name = 'contact.html'
 
-def delete1(request,id):
-    cont = contactdetails.objects.get(id=id)
-    cont.delete()
-    return redirect('/contact')
+    def get(self, request):
+        cont = contactdetails.objects.all()
+        return render(request, self.template_name, {'cont': cont})
 
-def Details(request):
-    contform = restdetailsform()
-    if request.method =='POST':
+
+# ----------------------------------------------------------------------
+# 9. Delete Views (Bookings, Contacts, Restaurant Details)
+# ----------------------------------------------------------------------
+class DeleteBookingView(View):
+    def get(self, request, id):
+        booking = get_object_or_404(bookingdetails, id=id)
+        booking.delete()
+        messages.success(request, 'Booking successfully removed.')
+        return redirect('bookingstatus')
+
+
+class DeleteContactView(View):
+    def get(self, request, id):
+        cont = get_object_or_404(contactdetails, id=id)
+        cont.delete()
+        messages.success(request, 'Inquiry successfully deleted.')
+        return redirect('contact')
+
+
+class DeleteRestDetailsView(View):
+    def get(self, request, id):
+        cont = get_object_or_404(restdetails, id=id)
+        cont.delete()
+        messages.success(request, 'Restaurant timing deleted.')
+        return redirect('Addrestdetails')
+
+
+# ----------------------------------------------------------------------
+# 10. Restaurant Details Setup / Management Views
+# ----------------------------------------------------------------------
+class AddRestDetailsFormView(View):
+    """View to add new restaurant hours / specials."""
+    template_name = 'Details.html'
+
+    def get(self, request):
+        contform = restdetailsform()
+        return render(request, self.template_name, {'contform': contform})
+
+    def post(self, request):
         contform = restdetailsform(request.POST)
         if contform.is_valid():
             contform.save()
-            messages.success(request,'Confirmed Your Request')
+            messages.success(request, 'Restaurant details saved successfully.')
             return redirect('Details')
-    else:
-        contform = restdetailsform()
-    return render(request,'Details.html',{'contform' : contform})
-
-def Addrestdetails(request):
-
-    cont1 = restdetails.objects.all()
-
-    return render(request,'Addrestdetails.html',{'cont1':cont1})
-
-def delete2(request,id):
-    cont = restdetails.objects.get(id=id)
-    cont.delete()
-    return redirect('/Addrestdetails')
+        return render(request, self.template_name, {'contform': contform})
 
 
-def edit(request,id):
+class RestDetailsListView(View):
+    """List of all restaurant operational hours / specials."""
+    template_name = 'Addrestdetails.html'
 
-    rest = restdetails.objects.get(id=id)
+    def get(self, request):
+        cont1 = restdetails.objects.all()
+        return render(request, self.template_name, {'cont1': cont1})
 
-    return render(request,'editdetails.html',{'rest':rest})
 
-def update(request,id):
-    rest = restdetails.objects.get(id=id)
-    if request.method == 'POST':
-        special = request.POST['special']
-        opentime = request.POST['opentime']
-        closetime = request.POST['closetime']
-        print("-------------------------------------", special, opentime, closetime)
-        rest.special = special
-        rest.opentime = opentime
-        rest.closetime = closetime
+class RestDetailsEditView(View):
+    """Renders the edit details page."""
+    template_name = 'editdetails.html'
+
+    def get(self, request, id):
+        rest = get_object_or_404(restdetails, id=id)
+        return render(request, self.template_name, {'rest': rest})
+
+
+class RestDetailsUpdateView(View):
+    """Processes update submission for restaurant details."""
+    template_name = 'editdetails.html'
+
+    def post(self, request, id):
+        rest = get_object_or_404(restdetails, id=id)
+        rest.special = request.POST.get('special', rest.special)
+        rest.opentime = request.POST.get('opentime', rest.opentime)
+        rest.closetime = request.POST.get('closetime', rest.closetime)
         rest.save()
-        return redirect("Addrestdetails")
+        messages.success(request, 'Details updated successfully.')
+        return redirect('Addrestdetails')
 
-    return render(request,"editdetails.html",{'rest':rest})
-
-
-
+    def get(self, request, id):
+        rest = get_object_or_404(restdetails, id=id)
+        return render(request, self.template_name, {'rest': rest})
